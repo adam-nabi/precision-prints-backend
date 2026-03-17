@@ -1,0 +1,144 @@
+{
+  "source": "/Users/Adam/Desktop/PrecisionPrintsApp/Pershision Prints/Pershision Prints/ContentView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Backend Connection",
+        "location": {
+          "startingColumn": 16,
+          "startingLine": 113
+        }
+      },
+      {
+        "comment": "",
+        "key": "Precision Prints",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 45
+        }
+      },
+      {
+        "comment": "",
+        "key": "Search orders",
+        "location": {
+          "startingColumn": 52,
+          "startingLine": 46
+        }
+      },
+      {
+        "comment": "",
+        "key": "All Statuses",
+        "location": {
+          "startingColumn": 32,
+          "startingLine": 59
+        }
+      },
+      {
+        "comment": "",
+        "key": "Try a different status filter or search term.",
+        "location": {
+          "startingColumn": 43,
+          "startingLine": 80
+        }
+      },
+      {
+        "comment": "",
+        "key": "No Orders Found",
+        "location": {
+          "startingColumn": 25,
+          "startingLine": 78
+        }
+      },
+      {
+        "comment": "",
+        "key": "Choose an order from the list to view details.",
+        "location": {
+          "startingColumn": 39,
+          "startingLine": 100
+        }
+      },
+      {
+        "comment": "",
+        "key": "Select an Order",
+        "location": {
+          "startingColumn": 21,
+          "startingLine": 98
+        }
+      },
+      {
+        "comment": "",
+        "key": "OK",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 114
+        }
+      },
+      {
+        "comment": "",
+        "key": "Dashboard",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 295
+        }
+      },
+      {
+        "comment": "",
+        "key": "Order details for internal review and follow-up.",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 232
+        }
+      },
+      {
+        "comment": "",
+        "key": "Reply Draft",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 246
+        }
+      },
+      {
+        "comment": "",
+        "key": "Copy Reply Draft",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 258
+        }
+      },
+      {
+        "comment": "",
+        "key": "Actions",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 264
+        }
+      },
+      {
+        "comment": "",
+        "key": "Mark Paid",
+        "location": {
+          "startingColumn": 32,
+          "startingLine": 268
+        }
+      },
+      {
+        "comment": "",
+        "key": "Start Printing",
+        "location": {
+          "startingColumn": 32,
+          "startingLine": 276
+        }
+      },
+      {
+        "comment": "",
+        "key": "Mark Shipped",
+        "location": {
+          "startingColumn": 32,
+          "startingLine": 283
+        }
+      }
+    ]
+  },
+  "version": 1
+}

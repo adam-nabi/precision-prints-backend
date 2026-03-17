@@ -1,0 +1,89 @@
+# Precision Prints Backend
+
+This is the smallest backend restart for your 3D printing business system.
+
+It does three useful things right now:
+
+- serves real order data over HTTP
+- lets you fetch one order or all orders
+- lets you update an order status
+
+## Files
+
+- `app/main.py`: FastAPI routes
+- `app/models.py`: shared order and status models
+- `app/store.py`: JSON file loading and saving
+- `data/orders.json`: starter data
+- `requirements.txt`: Python packages
+
+## Run Locally
+
+From the `backend` folder:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+uvicorn app.main:app --reload
+```
+
+Then open:
+
+- `http://127.0.0.1:8000/health`
+- `http://127.0.0.1:8000/orders`
+- `http://127.0.0.1:8000/docs`
+
+## What This Gives You
+
+This is the first backend step toward:
+
+- SwiftUI dashboard loading live orders
+- quote and status management
+- later Stripe payment links
+- later shipping label prep
+- later Reddit/Discord/lead ingestion
+- later STL download and analysis
+
+## Important Next Step
+
+Once this API is running, the next smallest app change is:
+
+1. make the iPhone app fetch `/orders`
+2. keep the same `Order` JSON shape
+3. later add `PATCH /orders/{id}/status` from the app
+
+## Host It Online
+
+The simplest hosted path is Render.
+
+Current official docs I checked:
+
+- [Deploy a FastAPI App](https://render.com/docs/deploy-fastapi)
+- [Blueprint YAML Reference](https://render.com/docs/blueprint-spec)
+- [Monorepo Support](https://render.com/docs/monorepo-support)
+
+This repo now includes a root [render.yaml](/Users/Adam/Desktop/PrecisionPrintsApp/render.yaml) that points Render at the `backend` folder.
+
+### Simple Render Steps
+
+1. Push this repo to GitHub.
+2. Create a Render account.
+3. In Render, create a new Blueprint or Web Service from the GitHub repo.
+4. Let Render read `render.yaml`.
+5. Wait for the deploy to finish.
+6. Open your public backend URL and test `/health` and `/orders`.
+
+### Important Note About Data
+
+Render web services use an ephemeral filesystem by default.
+
+That means:
+
+- your backend code will deploy fine
+- but JSON file changes can be lost on redeploy or restart
+
+For a serious production version, the next step after hosting is moving order storage to a real database like Postgres.
+
+## Compliance Note
+
+Automated monitoring and outreach on Reddit, Discord, and similar platforms must follow each platform's API, automation, spam, and rate-limit rules. The safe path is to start with approved ingestion methods, manual review, and draft generation before any automated outbound messaging.
