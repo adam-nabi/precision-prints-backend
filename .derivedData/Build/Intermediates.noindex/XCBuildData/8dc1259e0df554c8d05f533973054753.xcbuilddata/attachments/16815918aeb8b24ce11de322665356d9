@@ -36,6 +36,36 @@
     "swift-dependencies" : "/Users/Adam/Desktop/PrecisionPrintsApp/.derivedData/Build/Intermediates.noindex/Pershision Prints.build/Debug-iphoneos/Pershision Prints.build/Objects-normal/arm64/Item.swiftdeps",
     "swiftmodule" : "/Users/Adam/Desktop/PrecisionPrintsApp/.derivedData/Build/Intermediates.noindex/Pershision Prints.build/Debug-iphoneos/Pershision Prints.build/Objects-normal/arm64/Item~partial.swiftmodule"
   },
+  "/Users/Adam/Desktop/PrecisionPrintsApp/Pershision Prints/Pershision Prints/Order.swift" : {
+    "const-values" : "/Users/Adam/Desktop/PrecisionPrintsApp/.derivedData/Build/Intermediates.noindex/Pershision Prints.build/Debug-iphoneos/Pershision Prints.build/Objects-normal/arm64/Order.swiftconstvalues",
+    "dependencies" : "/Users/Adam/Desktop/PrecisionPrintsApp/.derivedData/Build/Intermediates.noindex/Pershision Prints.build/Debug-iphoneos/Pershision Prints.build/Objects-normal/arm64/Order.d",
+    "diagnostics" : "/Users/Adam/Desktop/PrecisionPrintsApp/.derivedData/Build/Intermediates.noindex/Pershision Prints.build/Debug-iphoneos/Pershision Prints.build/Objects-normal/arm64/Order.dia",
+    "index-unit-output-path" : "/Pershision Prints.build/Debug-iphoneos/Pershision Prints.build/Objects-normal/arm64/Order.o",
+    "llvm-bc" : "/Users/Adam/Desktop/PrecisionPrintsApp/.derivedData/Build/Intermediates.noindex/Pershision Prints.build/Debug-iphoneos/Pershision Prints.build/Objects-normal/arm64/Order.bc",
+    "object" : "/Users/Adam/Desktop/PrecisionPrintsApp/.derivedData/Build/Intermediates.noindex/Pershision Prints.build/Debug-iphoneos/Pershision Prints.build/Objects-normal/arm64/Order.o",
+    "swift-dependencies" : "/Users/Adam/Desktop/PrecisionPrintsApp/.derivedData/Build/Intermediates.noindex/Pershision Prints.build/Debug-iphoneos/Pershision Prints.build/Objects-normal/arm64/Order.swiftdeps",
+    "swiftmodule" : "/Users/Adam/Desktop/PrecisionPrintsApp/.derivedData/Build/Intermediates.noindex/Pershision Prints.build/Debug-iphoneos/Pershision Prints.build/Objects-normal/arm64/Order~partial.swiftmodule"
+  },
+  "/Users/Adam/Desktop/PrecisionPrintsApp/Pershision Prints/Pershision Prints/OrderAPI.swift" : {
+    "const-values" : "/Users/Adam/Desktop/PrecisionPrintsApp/.derivedData/Build/Intermediates.noindex/Pershision Prints.build/Debug-iphoneos/Pershision Prints.build/Objects-normal/arm64/OrderAPI.swiftconstvalues",
+    "dependencies" : "/Users/Adam/Desktop/PrecisionPrintsApp/.derivedData/Build/Intermediates.noindex/Pershision Prints.build/Debug-iphoneos/Pershision Prints.build/Objects-normal/arm64/OrderAPI.d",
+    "diagnostics" : "/Users/Adam/Desktop/PrecisionPrintsApp/.derivedData/Build/Intermediates.noindex/Pershision Prints.build/Debug-iphoneos/Pershision Prints.build/Objects-normal/arm64/OrderAPI.dia",
+    "index-unit-output-path" : "/Pershision Prints.build/Debug-iphoneos/Pershision Prints.build/Objects-normal/arm64/OrderAPI.o",
+    "llvm-bc" : "/Users/Adam/Desktop/PrecisionPrintsApp/.derivedData/Build/Intermediates.noindex/Pershision Prints.build/Debug-iphoneos/Pershision Prints.build/Objects-normal/arm64/OrderAPI.bc",
+    "object" : "/Users/Adam/Desktop/PrecisionPrintsApp/.derivedData/Build/Intermediates.noindex/Pershision Prints.build/Debug-iphoneos/Pershision Prints.build/Objects-normal/arm64/OrderAPI.o",
+    "swift-dependencies" : "/Users/Adam/Desktop/PrecisionPrintsApp/.derivedData/Build/Intermediates.noindex/Pershision Prints.build/Debug-iphoneos/Pershision Prints.build/Objects-normal/arm64/OrderAPI.swiftdeps",
+    "swiftmodule" : "/Users/Adam/Desktop/PrecisionPrintsApp/.derivedData/Build/Intermediates.noindex/Pershision Prints.build/Debug-iphoneos/Pershision Prints.build/Objects-normal/arm64/OrderAPI~partial.swiftmodule"
+  },
+  "/Users/Adam/Desktop/PrecisionPrintsApp/Pershision Prints/Pershision Prints/OrderStore.swift" : {
+    "const-values" : "/Users/Adam/Desktop/PrecisionPrintsApp/.derivedData/Build/Intermediates.noindex/Pershision Prints.build/Debug-iphoneos/Pershision Prints.build/Objects-normal/arm64/OrderStore.swiftconstvalues",
+    "dependencies" : "/Users/Adam/Desktop/PrecisionPrintsApp/.derivedData/Build/Intermediates.noindex/Pershision Prints.build/Debug-iphoneos/Pershision Prints.build/Objects-normal/arm64/OrderStore.d",
+    "diagnostics" : "/Users/Adam/Desktop/PrecisionPrintsApp/.derivedData/Build/Intermediates.noindex/Pershision Prints.build/Debug-iphoneos/Pershision Prints.build/Objects-normal/arm64/OrderStore.dia",
+    "index-unit-output-path" : "/Pershision Prints.build/Debug-iphoneos/Pershision Prints.build/Objects-normal/arm64/OrderStore.o",
+    "llvm-bc" : "/Users/Adam/Desktop/PrecisionPrintsApp/.derivedData/Build/Intermediates.noindex/Pershision Prints.build/Debug-iphoneos/Pershision Prints.build/Objects-normal/arm64/OrderStore.bc",
+    "object" : "/Users/Adam/Desktop/PrecisionPrintsApp/.derivedData/Build/Intermediates.noindex/Pershision Prints.build/Debug-iphoneos/Pershision Prints.build/Objects-normal/arm64/OrderStore.o",
+    "swift-dependencies" : "/Users/Adam/Desktop/PrecisionPrintsApp/.derivedData/Build/Intermediates.noindex/Pershision Prints.build/Debug-iphoneos/Pershision Prints.build/Objects-normal/arm64/OrderStore.swiftdeps",
+    "swiftmodule" : "/Users/Adam/Desktop/PrecisionPrintsApp/.derivedData/Build/Intermediates.noindex/Pershision Prints.build/Debug-iphoneos/Pershision Prints.build/Objects-normal/arm64/OrderStore~partial.swiftmodule"
+  },
   "/Users/Adam/Desktop/PrecisionPrintsApp/Pershision Prints/Pershision Prints/Pershision_PrintsApp.swift" : {
     "const-values" : "/Users/Adam/Desktop/PrecisionPrintsApp/.derivedData/Build/Intermediates.noindex/Pershision Prints.build/Debug-iphoneos/Pershision Prints.build/Objects-normal/arm64/Pershision_PrintsApp.swiftconstvalues",
     "dependencies" : "/Users/Adam/Desktop/PrecisionPrintsApp/.derivedData/Build/Intermediates.noindex/Pershision Prints.build/Debug-iphoneos/Pershision Prints.build/Objects-normal/arm64/Pershision_PrintsApp.d",

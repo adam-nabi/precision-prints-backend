@@ -79,7 +79,7 @@
         "key": "Dashboard",
         "location": {
           "startingColumn": 26,
-          "startingLine": 353
+          "startingLine": 363
         }
       },
       {
@@ -116,10 +116,18 @@
       },
       {
         "comment": "",
-        "key": "No payment link created yet.",
+        "key": "No payment link saved yet.",
         "location": {
           "startingColumn": 30,
           "startingLine": 294
+        }
+      },
+      {
+        "comment": "",
+        "key": "Paste PayPal, Square, or Stripe payment link",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 297
         }
       },
       {
@@ -132,10 +140,10 @@
       },
       {
         "comment": "",
-        "key": "Create Payment Link",
+        "key": "Save Payment Link",
         "location": {
           "startingColumn": 35,
-          "startingLine": 302
+          "startingLine": 311
         }
       },
       {
@@ -143,7 +151,7 @@
         "key": "Notes",
         "location": {
           "startingColumn": 30,
-          "startingLine": 310
+          "startingLine": 320
         }
       },
       {
@@ -151,7 +159,7 @@
         "key": "Actions",
         "location": {
           "startingColumn": 26,
-          "startingLine": 322
+          "startingLine": 332
         }
       },
       {
@@ -159,7 +167,7 @@
         "key": "Mark Paid",
         "location": {
           "startingColumn": 32,
-          "startingLine": 326
+          "startingLine": 336
         }
       },
       {
@@ -167,7 +175,7 @@
         "key": "Start Printing",
         "location": {
           "startingColumn": 32,
-          "startingLine": 334
+          "startingLine": 344
         }
       },
       {
@@ -175,7 +183,7 @@
         "key": "Mark Shipped",
         "location": {
           "startingColumn": 32,
-          "startingLine": 341
+          "startingLine": 351
         }
       }
     ]

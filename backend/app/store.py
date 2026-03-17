@@ -86,3 +86,21 @@ def save_order(updated_order: Order) -> Optional[Order]:
             return updated_order
 
     return None
+
+
+def update_payment_link(order_id: UUID, payment_link_url: str) -> Optional[Order]:
+    orders = load_orders()
+
+    for index, order in enumerate(orders):
+        if order.id == order_id:
+            updated_order = order.model_copy(
+                update={
+                    "paymentLinkURL": payment_link_url,
+                    "status": OrderStatus.PENDING_PAYMENT,
+                }
+            )
+            orders[index] = updated_order
+            save_orders(orders)
+            return updated_order
+
+    return None

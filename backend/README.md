@@ -44,36 +44,29 @@ This is the first backend step toward:
 - later Reddit/Discord/lead ingestion
 - later STL download and analysis
 
-## Stripe Payment Links
+## Manual Payment Links
 
-This backend can now create a Stripe payment link for an order.
-
-Set this environment variable before using it:
-
-```bash
-STRIPE_SECRET_KEY=sk_test_...
-```
-
-Optional:
-
-```bash
-PAYMENT_LINK_ALLOWED_COUNTRIES=US,CA
-```
+This backend now supports a simple manual payment-link workflow.
 
 New route:
 
 ```text
-POST /orders/{order_id}/payment-link
+PATCH /orders/{order_id}/payment-link
+```
+
+Request body:
+
+```json
+{
+  "paymentLinkURL": "https://..."
+}
 ```
 
 What it does:
 
-- creates a Stripe Payment Link
-- collects billing address
-- collects shipping address
-- adds a fixed shipping charge if the order has one
-- saves the payment link URL back onto the order
+- saves a manual payment link onto the order
 - moves the order to `Pending Payment`
+- lets the iPhone app open that link
 
 ## Important Next Step
 

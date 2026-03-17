@@ -39,3 +39,7 @@ class Order(BaseModel):
 
 class UpdateStatusRequest(BaseModel):
     status: OrderStatus
+
+
+class UpdatePaymentLinkRequest(BaseModel):
+    paymentLinkURL: str
