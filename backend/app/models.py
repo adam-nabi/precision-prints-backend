@@ -1,3 +1,4 @@
+from typing import Optional
 from enum import Enum
 from uuid import UUID
 
@@ -28,6 +29,12 @@ class Order(BaseModel):
     totalAmount: float
     status: OrderStatus
     replyDraft: str
+    modelDownloadURL: Optional[str] = None
+    paymentLinkURL: Optional[str] = None
+    shippingName: Optional[str] = None
+    shippingAddress: Optional[str] = None
+    shippingZIP: Optional[str] = None
+    notes: Optional[str] = None
 
 
 class UpdateStatusRequest(BaseModel):

@@ -10,7 +10,13 @@
     "shippingAmount": 5.95,
     "totalAmount": 29.95,
     "status": "New Lead",
-    "replyDraft": "Hi Jordan, thanks for sending over the file. I can print 2 units in PLA+ for $29.95 shipped. If that works for you, I can send the invoice today."
+    "replyDraft": "Hi Jordan, thanks for sending over the file. I can print 2 units in PLA+ for $29.95 shipped. If that works for you, I can send the invoice today.",
+    "modelDownloadURL": null,
+    "paymentLinkURL": null,
+    "shippingName": null,
+    "shippingAddress": null,
+    "shippingZIP": null,
+    "notes": "Need customer color confirmation before printing."
   },
   {
     "id": "275B6C0B-2839-402F-A94A-F90545672189",
@@ -23,7 +29,13 @@
     "shippingAmount": 7.5,
     "totalAmount": 58.0,
     "status": "Quoted",
-    "replyDraft": "Hi Casey, your drone guard set is quoted at $58.00 shipped in PETG. Let me know if you'd like me to move forward and I will send payment details."
+    "replyDraft": "Hi Casey, your drone guard set is quoted at $58.00 shipped in PETG. Let me know if you'd like me to move forward and I will send payment details.",
+    "modelDownloadURL": null,
+    "paymentLinkURL": null,
+    "shippingName": null,
+    "shippingAddress": null,
+    "shippingZIP": null,
+    "notes": null
   },
   {
     "id": "A9A8D3D0-B1AB-4025-90CF-ECA78CBF46CA",
@@ -36,7 +48,13 @@
     "shippingAmount": 8.25,
     "totalAmount": 74.25,
     "status": "Pending Payment",
-    "replyDraft": "Hi Morgan, I reviewed the gearbox files and everything looks printable. Your total is $74.25 shipped. Once payment comes through, I can schedule it right away."
+    "replyDraft": "Hi Morgan, I reviewed the gearbox files and everything looks printable. Your total is $74.25 shipped. Once payment comes through, I can schedule it right away.",
+    "modelDownloadURL": null,
+    "paymentLinkURL": null,
+    "shippingName": null,
+    "shippingAddress": null,
+    "shippingZIP": null,
+    "notes": "Waiting for payment."
   },
   {
     "id": "24DF37A7-478D-4EAB-A4DF-388D655E4660",
@@ -49,6 +67,12 @@
     "shippingAmount": 9.4,
     "totalAmount": 96.4,
     "status": "Printing",
-    "replyDraft": "Hi Alex, your enclosure panels are now in production. I will send tracking as soon as the order is packed and shipped."
+    "replyDraft": "Hi Alex, your enclosure panels are now in production. I will send tracking as soon as the order is packed and shipped.",
+    "modelDownloadURL": null,
+    "paymentLinkURL": null,
+    "shippingName": null,
+    "shippingAddress": null,
+    "shippingZIP": null,
+    "notes": "Printing on ASA profile."
   }
 ]

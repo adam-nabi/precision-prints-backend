@@ -74,3 +74,15 @@ def update_order_status(order_id: UUID, status: OrderStatus) -> Optional[Order]:
             return updated_order
 
     return None
+
+
+def save_order(updated_order: Order) -> Optional[Order]:
+    orders = load_orders()
+
+    for index, order in enumerate(orders):
+        if order.id == updated_order.id:
+            orders[index] = updated_order
+            save_orders(orders)
+            return updated_order
+
+    return None

@@ -44,6 +44,37 @@ This is the first backend step toward:
 - later Reddit/Discord/lead ingestion
 - later STL download and analysis
 
+## Stripe Payment Links
+
+This backend can now create a Stripe payment link for an order.
+
+Set this environment variable before using it:
+
+```bash
+STRIPE_SECRET_KEY=sk_test_...
+```
+
+Optional:
+
+```bash
+PAYMENT_LINK_ALLOWED_COUNTRIES=US,CA
+```
+
+New route:
+
+```text
+POST /orders/{order_id}/payment-link
+```
+
+What it does:
+
+- creates a Stripe Payment Link
+- collects billing address
+- collects shipping address
+- adds a fixed shipping charge if the order has one
+- saves the payment link URL back onto the order
+- moves the order to `Pending Payment`
+
 ## Important Next Step
 
 Once this API is running, the next smallest app change is:

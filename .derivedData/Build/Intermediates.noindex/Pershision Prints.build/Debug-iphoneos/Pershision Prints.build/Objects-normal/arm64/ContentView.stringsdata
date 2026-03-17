@@ -7,7 +7,7 @@
         "key": "Backend Connection",
         "location": {
           "startingColumn": 16,
-          "startingLine": 113
+          "startingLine": 116
         }
       },
       {
@@ -55,7 +55,7 @@
         "key": "Choose an order from the list to view details.",
         "location": {
           "startingColumn": 39,
-          "startingLine": 100
+          "startingLine": 103
         }
       },
       {
@@ -63,7 +63,7 @@
         "key": "Select an Order",
         "location": {
           "startingColumn": 21,
-          "startingLine": 98
+          "startingLine": 101
         }
       },
       {
@@ -71,7 +71,7 @@
         "key": "OK",
         "location": {
           "startingColumn": 20,
-          "startingLine": 114
+          "startingLine": 117
         }
       },
       {
@@ -79,7 +79,7 @@
         "key": "Dashboard",
         "location": {
           "startingColumn": 26,
-          "startingLine": 295
+          "startingLine": 353
         }
       },
       {
@@ -87,7 +87,7 @@
         "key": "Order details for internal review and follow-up.",
         "location": {
           "startingColumn": 26,
-          "startingLine": 232
+          "startingLine": 252
         }
       },
       {
@@ -95,7 +95,7 @@
         "key": "Reply Draft",
         "location": {
           "startingColumn": 26,
-          "startingLine": 246
+          "startingLine": 266
         }
       },
       {
@@ -103,7 +103,47 @@
         "key": "Copy Reply Draft",
         "location": {
           "startingColumn": 31,
-          "startingLine": 258
+          "startingLine": 278
+        }
+      },
+      {
+        "comment": "",
+        "key": "Payment",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 284
+        }
+      },
+      {
+        "comment": "",
+        "key": "No payment link created yet.",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 294
+        }
+      },
+      {
+        "comment": "",
+        "key": "Open Payment Link",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 290
+        }
+      },
+      {
+        "comment": "",
+        "key": "Create Payment Link",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 302
+        }
+      },
+      {
+        "comment": "",
+        "key": "Notes",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 310
         }
       },
       {
@@ -111,7 +151,7 @@
         "key": "Actions",
         "location": {
           "startingColumn": 26,
-          "startingLine": 264
+          "startingLine": 322
         }
       },
       {
@@ -119,7 +159,7 @@
         "key": "Mark Paid",
         "location": {
           "startingColumn": 32,
-          "startingLine": 268
+          "startingLine": 326
         }
       },
       {
@@ -127,7 +167,7 @@
         "key": "Start Printing",
         "location": {
           "startingColumn": 32,
-          "startingLine": 276
+          "startingLine": 334
         }
       },
       {
@@ -135,7 +175,7 @@
         "key": "Mark Shipped",
         "location": {
           "startingColumn": 32,
-          "startingLine": 283
+          "startingLine": 341
         }
       }
     ]
