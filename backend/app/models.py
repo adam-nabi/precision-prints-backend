@@ -57,6 +57,22 @@ class IntakeLeadRequest(BaseModel):
     colorPreference: Optional[str] = None
 
 
+class ScoutMessageRequest(BaseModel):
+    source: str
+    customerName: str
+    messageText: str
+    sourceURL: Optional[str] = None
+
+
+class ScoutMessageResponse(BaseModel):
+    matched: bool
+    reason: str
+    order: Optional[Order] = None
+    detectedModelURL: Optional[str] = None
+    detectedMaterial: Optional[str] = None
+    unsupportedMaterial: Optional[str] = None
+
+
 class PricingSettings(BaseModel):
     baseOrderFee: float
     materialMarkupMultiplier: float

@@ -123,6 +123,39 @@ What it does:
 - saves the source message into notes
 - stores the model link so the iPhone app can open it
 
+## Reddit and Discord Scout
+
+This backend now has a simple scout route for Reddit and Discord messages.
+
+Route:
+
+```text
+POST /scout/messages
+```
+
+What it does:
+
+- checks whether a message looks like a 3D print request
+- looks for Thingiverse, Printables, MakerWorld, Cults3D, Thangs, STL, 3MF, or ZIP links
+- creates a dashboard order when it finds a likely lead
+- keeps unsupported materials in `Manual Review`
+
+Important shop rule:
+
+- the system is now limited to `PLA` and `PETG`
+- requests for ASA, ABS, resin, TPU, nylon, or carbon-fiber materials are flagged for review
+
+Example request:
+
+```json
+{
+  "source": "Discord",
+  "customerName": "Casey T.",
+  "messageText": "Can someone 3D print this for me in PETG? https://www.printables.com/model/12345-part",
+  "sourceURL": "https://discord.com/channels/..."
+}
+```
+
 ## Important Next Step
 
 Once this API is running, the next smallest app change is:

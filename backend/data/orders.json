@@ -4,13 +4,13 @@
     "customerName": "Jordan M.",
     "source": "Reddit",
     "fileName": "iphone_mount_v2.stl",
-    "material": "PLA+",
+    "material": "PLA",
     "color": "Matte Black",
     "quantity": 2,
     "shippingAmount": 5.95,
     "totalAmount": 29.95,
     "status": "New Lead",
-    "replyDraft": "Hi Jordan, thanks for sending over the file. I can print 2 units in PLA+ for $29.95 shipped. If that works for you, I can send the invoice today.",
+    "replyDraft": "Hi Jordan, thanks for sending over the file. I can print 2 units in PLA for $29.95 shipped. If that works for you, I can send the invoice today.",
     "modelDownloadURL": null,
     "paymentLinkURL": null,
     "shippingName": null,
@@ -42,7 +42,7 @@
     "customerName": "Morgan R.",
     "source": "Website",
     "fileName": "custom_gearbox.zip",
-    "material": "ABS",
+    "material": "PETG",
     "color": "Gray",
     "quantity": 1,
     "shippingAmount": 8.25,
@@ -61,7 +61,7 @@
     "customerName": "Alex P.",
     "source": "Website",
     "fileName": "enclosure_panel.3mf",
-    "material": "ASA",
+    "material": "PETG",
     "color": "White",
     "quantity": 3,
     "shippingAmount": 9.4,
@@ -73,6 +73,6 @@
     "shippingName": null,
     "shippingAddress": null,
     "shippingZIP": null,
-    "notes": "Printing on ASA profile."
+    "notes": "Printing on PETG profile."
   }
 ]
