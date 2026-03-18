@@ -6,6 +6,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
 from .models import (
+    DiscordScanResponse,
     IntakeLeadRequest,
     Order,
     OrderStatus,
@@ -17,6 +18,7 @@ from .models import (
     UpdatePricingSettingsRequest,
     UpdateStatusRequest,
 )
+from .discord_ingest import DiscordConfigError, fetch_recent_messages
 from .model_worker import process_model_url
 from .reddit_ingest import RedditConfigError, fetch_recent_posts
 from .scout import ALLOWED_SOURCES, analyze_message, build_notes, build_reply_draft, resolve_order_material
@@ -24,9 +26,11 @@ from .store import (
     create_order,
     delete_order,
     get_order,
+    load_discord_seen_ids,
     load_orders,
     load_pricing_settings,
     load_reddit_seen_ids,
+    save_discord_seen_ids,
     save_pricing_settings,
     save_reddit_seen_ids,
     save_order,
@@ -96,6 +100,54 @@ def scout_message(request: ScoutMessageRequest) -> ScoutMessageResponse:
         detectedModelURL=match.detected_model_url,
         detectedMaterial=match.detected_material,
         unsupportedMaterial=match.unsupported_material,
+    )
+
+
+@app.post("/integrations/discord/scan", response_model=DiscordScanResponse)
+def scan_discord() -> DiscordScanResponse:
+    try:
+        messages = fetch_recent_messages()
+    except DiscordConfigError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+    seen_message_ids = set(load_discord_seen_ids())
+    created_orders: List[Order] = []
+    scanned_messages = 0
+
+    for message in messages:
+        scanned_messages += 1
+        if not message.message_id or message.message_id in seen_message_ids:
+            continue
+
+        match = analyze_message(message.content, message.source_url)
+        seen_message_ids.add(message.message_id)
+
+        if not match.matched:
+            continue
+
+        imported_order = _build_order_from_lead(
+            source="Discord",
+            customer_name=message.author_name,
+            message_text=message.content,
+            source_url=message.source_url,
+            model_url=match.detected_model_url,
+            file_name=None,
+            quantity=1,
+            detected_material=match.detected_material,
+            unsupported_material=match.unsupported_material,
+            color_preference=None,
+        )
+        created_orders.append(_create_and_process_order(imported_order))
+
+    save_discord_seen_ids(list(seen_message_ids))
+
+    imported_count = len(created_orders)
+    return DiscordScanResponse(
+        scannedMessages=scanned_messages,
+        importedOrders=imported_count,
+        skippedMessages=max(scanned_messages - imported_count, 0),
+        summary=f"Scanned {scanned_messages} Discord message(s) and created {imported_count} order(s).",
+        createdOrders=created_orders,
     )
 
 

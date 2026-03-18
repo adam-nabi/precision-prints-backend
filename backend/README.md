@@ -186,6 +186,38 @@ What it does:
 - imports matching posts as orders
 - skips posts it already imported before
 
+## Real Discord Imports
+
+This backend can now scan real Discord messages and turn matching ones into dashboard orders.
+
+Route:
+
+```text
+POST /integrations/discord/scan
+```
+
+Required environment variables:
+
+- `DISCORD_BOT_TOKEN`
+- `DISCORD_CHANNEL_IDS`
+
+Optional:
+
+- `DISCORD_LIMIT`
+
+What it does:
+
+- fetches recent messages from the configured Discord channels
+- checks whether the message looks like a 3D print request
+- imports matching messages as orders
+- skips messages it already imported before
+
+Important:
+
+- this only works in servers where your bot is allowed
+- your bot should have access to read the selected channels
+- message content access must be enabled for the bot if you want to read message text and attachments
+
 ## Important Next Step
 
 Once this API is running, the next smallest app change is:

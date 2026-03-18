@@ -84,6 +84,14 @@ class RedditScanResponse(BaseModel):
     createdOrders: List[Order] = []
 
 
+class DiscordScanResponse(BaseModel):
+    scannedMessages: int
+    importedOrders: int
+    skippedMessages: int
+    summary: str
+    createdOrders: List[Order] = []
+
+
 class PricingSettings(BaseModel):
     baseOrderFee: float
     materialMarkupMultiplier: float
