@@ -31,6 +31,9 @@ class Order(BaseModel):
     replyDraft: str
     modelDownloadURL: Optional[str] = None
     paymentLinkURL: Optional[str] = None
+    downloadedFilePath: Optional[str] = None
+    estimatedPrintHours: Optional[float] = None
+    estimatedMaterialGrams: Optional[float] = None
     shippingName: Optional[str] = None
     shippingAddress: Optional[str] = None
     shippingZIP: Optional[str] = None

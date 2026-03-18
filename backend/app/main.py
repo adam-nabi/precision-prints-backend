@@ -16,6 +16,7 @@ from .models import (
     UpdatePricingSettingsRequest,
     UpdateStatusRequest,
 )
+from .model_worker import process_model_url
 from .scout import ALLOWED_SOURCES, analyze_message, build_notes, build_reply_draft, resolve_order_material
 from .store import (
     create_order,
@@ -24,6 +25,7 @@ from .store import (
     load_orders,
     load_pricing_settings,
     save_pricing_settings,
+    save_order,
     update_order_status,
     update_payment_link,
 )
@@ -81,7 +83,7 @@ def scout_message(request: ScoutMessageRequest) -> ScoutMessageResponse:
         unsupported_material=match.unsupported_material,
         color_preference=None,
     )
-    saved_order = create_order(imported_order)
+    saved_order = _create_and_process_order(imported_order)
 
     return ScoutMessageResponse(
         matched=True,
@@ -108,7 +110,7 @@ def intake_lead(request: IntakeLeadRequest) -> Order:
         unsupported_material=_resolve_unsupported_material(request.materialPreference, analyzed_match.unsupported_material),
         color_preference=request.colorPreference,
     )
-    return create_order(imported_order)
+    return _create_and_process_order(imported_order)
 
 
 @app.get("/orders/{order_id}", response_model=Order)
@@ -185,6 +187,42 @@ def _build_order_from_lead(
     )
 
 
+def _create_and_process_order(order: Order) -> Order:
+    saved_order = create_order(order)
+
+    if saved_order.material.startswith("Unsupported:"):
+        return saved_order
+
+    pricing_settings = load_pricing_settings()
+    processing_result = process_model_url(
+        order_id=saved_order.id,
+        model_url=saved_order.modelDownloadURL,
+        quantity=saved_order.quantity,
+        pricing_settings=pricing_settings,
+    )
+
+    updated_notes = saved_order.notes or ""
+    if updated_notes:
+        updated_notes += "\n\n"
+    updated_notes += processing_result.reason
+
+    updated_order = saved_order.model_copy(
+        update={
+            "fileName": processing_result.file_name or saved_order.fileName,
+            "shippingAmount": processing_result.shipping_amount or saved_order.shippingAmount,
+            "totalAmount": processing_result.total_amount or saved_order.totalAmount,
+            "status": _processed_status(saved_order.status, processing_result.downloaded),
+            "replyDraft": _processed_reply_draft(saved_order, processing_result),
+            "notes": updated_notes,
+            "downloadedFilePath": processing_result.downloaded_file_path,
+            "estimatedPrintHours": processing_result.estimated_print_hours,
+            "estimatedMaterialGrams": processing_result.estimated_material_grams,
+        }
+    )
+
+    return save_order(updated_order) or updated_order
+
+
 def _lead_file_name(file_name: Optional[str], model_url: Optional[str]) -> str:
     if file_name:
         return file_name
@@ -200,6 +238,32 @@ def _lead_status(model_url: Optional[str], unsupported_material: Optional[str]) 
         return OrderStatus.MANUAL_REVIEW
 
     return OrderStatus.NEW_LEAD if model_url else OrderStatus.MANUAL_REVIEW
+
+
+def _processed_status(current_status: OrderStatus, downloaded: bool) -> OrderStatus:
+    if downloaded:
+        return OrderStatus.QUOTED
+
+    return current_status
+
+
+def _processed_reply_draft(order: Order, processing_result) -> str:
+    if not processing_result.downloaded:
+        return order.replyDraft
+
+    first_name = order.customerName.split()[0]
+    material_text = order.material
+    total_amount = processing_result.total_amount or order.totalAmount
+    shipping_amount = processing_result.shipping_amount or order.shippingAmount
+
+    return (
+        f"Hi {first_name}, I reviewed the file and created a rough quote. "
+        f"I can print {order.quantity} unit"
+        f"{'' if order.quantity == 1 else 's'} in {material_text} for "
+        f"${total_amount:.2f} shipped. "
+        f"Shipping is currently estimated at ${shipping_amount:.2f}. "
+        "If that works for you, send your color choice and shipping ZIP code and I can move to payment."
+    )
 
 
 def _resolve_requested_material(material_preference: Optional[str], detected_material: Optional[str]) -> Optional[str]:
