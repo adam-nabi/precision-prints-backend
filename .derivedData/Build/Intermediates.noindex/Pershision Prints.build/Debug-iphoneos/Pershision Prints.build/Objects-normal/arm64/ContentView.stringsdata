@@ -7,7 +7,7 @@
         "key": "Backend Connection",
         "location": {
           "startingColumn": 16,
-          "startingLine": 116
+          "startingLine": 123
         }
       },
       {
@@ -15,7 +15,7 @@
         "key": "Precision Prints",
         "location": {
           "startingColumn": 30,
-          "startingLine": 45
+          "startingLine": 47
         }
       },
       {
@@ -23,7 +23,15 @@
         "key": "Search orders",
         "location": {
           "startingColumn": 52,
-          "startingLine": 46
+          "startingLine": 48
+        }
+      },
+      {
+        "comment": "",
+        "key": "Pricing",
+        "location": {
+          "startingColumn": 32,
+          "startingLine": 61
         }
       },
       {
@@ -31,7 +39,7 @@
         "key": "All Statuses",
         "location": {
           "startingColumn": 32,
-          "startingLine": 59
+          "startingLine": 65
         }
       },
       {
@@ -39,7 +47,7 @@
         "key": "Try a different status filter or search term.",
         "location": {
           "startingColumn": 43,
-          "startingLine": 80
+          "startingLine": 86
         }
       },
       {
@@ -47,7 +55,7 @@
         "key": "No Orders Found",
         "location": {
           "startingColumn": 25,
-          "startingLine": 78
+          "startingLine": 84
         }
       },
       {
@@ -55,7 +63,7 @@
         "key": "Choose an order from the list to view details.",
         "location": {
           "startingColumn": 39,
-          "startingLine": 103
+          "startingLine": 109
         }
       },
       {
@@ -63,7 +71,7 @@
         "key": "Select an Order",
         "location": {
           "startingColumn": 21,
-          "startingLine": 101
+          "startingLine": 107
         }
       },
       {
@@ -71,7 +79,7 @@
         "key": "OK",
         "location": {
           "startingColumn": 20,
-          "startingLine": 117
+          "startingLine": 124
         }
       },
       {
@@ -79,7 +87,7 @@
         "key": "Dashboard",
         "location": {
           "startingColumn": 26,
-          "startingLine": 363
+          "startingLine": 397
         }
       },
       {
@@ -87,7 +95,7 @@
         "key": "Order details for internal review and follow-up.",
         "location": {
           "startingColumn": 26,
-          "startingLine": 252
+          "startingLine": 286
         }
       },
       {
@@ -95,7 +103,7 @@
         "key": "Reply Draft",
         "location": {
           "startingColumn": 26,
-          "startingLine": 266
+          "startingLine": 300
         }
       },
       {
@@ -103,7 +111,7 @@
         "key": "Copy Reply Draft",
         "location": {
           "startingColumn": 31,
-          "startingLine": 278
+          "startingLine": 312
         }
       },
       {
@@ -111,7 +119,7 @@
         "key": "Payment",
         "location": {
           "startingColumn": 26,
-          "startingLine": 284
+          "startingLine": 318
         }
       },
       {
@@ -119,7 +127,7 @@
         "key": "No payment link saved yet.",
         "location": {
           "startingColumn": 30,
-          "startingLine": 294
+          "startingLine": 328
         }
       },
       {
@@ -127,7 +135,7 @@
         "key": "Paste PayPal, Square, or Stripe payment link",
         "location": {
           "startingColumn": 35,
-          "startingLine": 297
+          "startingLine": 331
         }
       },
       {
@@ -135,7 +143,7 @@
         "key": "Open Payment Link",
         "location": {
           "startingColumn": 35,
-          "startingLine": 290
+          "startingLine": 324
         }
       },
       {
@@ -143,7 +151,7 @@
         "key": "Save Payment Link",
         "location": {
           "startingColumn": 35,
-          "startingLine": 311
+          "startingLine": 345
         }
       },
       {
@@ -151,7 +159,7 @@
         "key": "Notes",
         "location": {
           "startingColumn": 30,
-          "startingLine": 320
+          "startingLine": 354
         }
       },
       {
@@ -159,7 +167,7 @@
         "key": "Actions",
         "location": {
           "startingColumn": 26,
-          "startingLine": 332
+          "startingLine": 366
         }
       },
       {
@@ -167,7 +175,7 @@
         "key": "Mark Paid",
         "location": {
           "startingColumn": 32,
-          "startingLine": 336
+          "startingLine": 370
         }
       },
       {
@@ -175,7 +183,7 @@
         "key": "Start Printing",
         "location": {
           "startingColumn": 32,
-          "startingLine": 344
+          "startingLine": 378
         }
       },
       {
@@ -183,7 +191,47 @@
         "key": "Mark Shipped",
         "location": {
           "startingColumn": 32,
-          "startingLine": 351
+          "startingLine": 385
+        }
+      },
+      {
+        "comment": "",
+        "key": "Pricing",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 472
+        }
+      },
+      {
+        "comment": "",
+        "key": "Pricing Controls",
+        "location": {
+          "startingColumn": 25,
+          "startingLine": 464
+        }
+      },
+      {
+        "comment": "",
+        "key": "Close",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 475
+        }
+      },
+      {
+        "comment": "",
+        "key": "Save",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 481
+        }
+      },
+      {
+        "comment": "",
+        "key": "0.00",
+        "location": {
+          "startingColumn": 23,
+          "startingLine": 506
         }
       }
     ]

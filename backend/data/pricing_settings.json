@@ -1,0 +1,7 @@
+{
+  "baseOrderFee": 5.0,
+  "materialMarkupMultiplier": 1.35,
+  "hourlyPrintRate": 4.0,
+  "complexitySurcharge": 3.0,
+  "shippingMarkupFlat": 1.5
+}

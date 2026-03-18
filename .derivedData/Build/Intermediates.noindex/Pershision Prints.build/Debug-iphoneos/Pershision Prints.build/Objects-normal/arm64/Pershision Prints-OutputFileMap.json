@@ -75,5 +75,15 @@
     "object" : "/Users/Adam/Desktop/PrecisionPrintsApp/.derivedData/Build/Intermediates.noindex/Pershision Prints.build/Debug-iphoneos/Pershision Prints.build/Objects-normal/arm64/Pershision_PrintsApp.o",
     "swift-dependencies" : "/Users/Adam/Desktop/PrecisionPrintsApp/.derivedData/Build/Intermediates.noindex/Pershision Prints.build/Debug-iphoneos/Pershision Prints.build/Objects-normal/arm64/Pershision_PrintsApp.swiftdeps",
     "swiftmodule" : "/Users/Adam/Desktop/PrecisionPrintsApp/.derivedData/Build/Intermediates.noindex/Pershision Prints.build/Debug-iphoneos/Pershision Prints.build/Objects-normal/arm64/Pershision_PrintsApp~partial.swiftmodule"
+  },
+  "/Users/Adam/Desktop/PrecisionPrintsApp/Pershision Prints/Pershision Prints/PricingSettings.swift" : {
+    "const-values" : "/Users/Adam/Desktop/PrecisionPrintsApp/.derivedData/Build/Intermediates.noindex/Pershision Prints.build/Debug-iphoneos/Pershision Prints.build/Objects-normal/arm64/PricingSettings.swiftconstvalues",
+    "dependencies" : "/Users/Adam/Desktop/PrecisionPrintsApp/.derivedData/Build/Intermediates.noindex/Pershision Prints.build/Debug-iphoneos/Pershision Prints.build/Objects-normal/arm64/PricingSettings.d",
+    "diagnostics" : "/Users/Adam/Desktop/PrecisionPrintsApp/.derivedData/Build/Intermediates.noindex/Pershision Prints.build/Debug-iphoneos/Pershision Prints.build/Objects-normal/arm64/PricingSettings.dia",
+    "index-unit-output-path" : "/Pershision Prints.build/Debug-iphoneos/Pershision Prints.build/Objects-normal/arm64/PricingSettings.o",
+    "llvm-bc" : "/Users/Adam/Desktop/PrecisionPrintsApp/.derivedData/Build/Intermediates.noindex/Pershision Prints.build/Debug-iphoneos/Pershision Prints.build/Objects-normal/arm64/PricingSettings.bc",
+    "object" : "/Users/Adam/Desktop/PrecisionPrintsApp/.derivedData/Build/Intermediates.noindex/Pershision Prints.build/Debug-iphoneos/Pershision Prints.build/Objects-normal/arm64/PricingSettings.o",
+    "swift-dependencies" : "/Users/Adam/Desktop/PrecisionPrintsApp/.derivedData/Build/Intermediates.noindex/Pershision Prints.build/Debug-iphoneos/Pershision Prints.build/Objects-normal/arm64/PricingSettings.swiftdeps",
+    "swiftmodule" : "/Users/Adam/Desktop/PrecisionPrintsApp/.derivedData/Build/Intermediates.noindex/Pershision Prints.build/Debug-iphoneos/Pershision Prints.build/Objects-normal/arm64/PricingSettings~partial.swiftmodule"
   }
 }

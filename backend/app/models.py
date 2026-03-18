@@ -43,3 +43,31 @@ class UpdateStatusRequest(BaseModel):
 
 class UpdatePaymentLinkRequest(BaseModel):
     paymentLinkURL: str
+
+
+class IntakeLeadRequest(BaseModel):
+    source: str
+    customerName: str
+    messageText: str
+    sourceURL: Optional[str] = None
+    modelURL: Optional[str] = None
+    fileName: Optional[str] = None
+    quantity: Optional[int] = 1
+    materialPreference: Optional[str] = None
+    colorPreference: Optional[str] = None
+
+
+class PricingSettings(BaseModel):
+    baseOrderFee: float
+    materialMarkupMultiplier: float
+    hourlyPrintRate: float
+    complexitySurcharge: float
+    shippingMarkupFlat: float
+
+
+class UpdatePricingSettingsRequest(BaseModel):
+    baseOrderFee: float
+    materialMarkupMultiplier: float
+    hourlyPrintRate: float
+    complexitySurcharge: float
+    shippingMarkupFlat: float

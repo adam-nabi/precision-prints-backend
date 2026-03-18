@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import List, Optional
 from uuid import UUID
 
-from .models import Order, OrderStatus
+from .models import Order, OrderStatus, PricingSettings
 
 
 DEFAULT_DATA_DIR = Path(__file__).resolve().parent.parent / "data"
@@ -24,6 +24,10 @@ def _orders_file() -> Path:
         return Path(custom_file)
 
     return _data_dir() / "orders.json"
+
+
+def _pricing_file() -> Path:
+    return _data_dir() / "pricing_settings.json"
 
 
 def _ensure_data_dir() -> None:
@@ -53,6 +57,13 @@ def save_orders(orders: List[Order]) -> None:
             file,
             indent=2,
         )
+
+
+def create_order(order: Order) -> Order:
+    orders = load_orders()
+    orders.insert(0, order)
+    save_orders(orders)
+    return order
 
 
 def get_order(order_id: UUID) -> Optional[Order]:
@@ -88,6 +99,17 @@ def save_order(updated_order: Order) -> Optional[Order]:
     return None
 
 
+def delete_order(order_id: UUID) -> bool:
+    orders = load_orders()
+    remaining_orders = [order for order in orders if order.id != order_id]
+
+    if len(remaining_orders) == len(orders):
+        return False
+
+    save_orders(remaining_orders)
+    return True
+
+
 def update_payment_link(order_id: UUID, payment_link_url: str) -> Optional[Order]:
     orders = load_orders()
 
@@ -104,3 +126,34 @@ def update_payment_link(order_id: UUID, payment_link_url: str) -> Optional[Order
             return updated_order
 
     return None
+
+
+def load_pricing_settings() -> PricingSettings:
+    _ensure_data_dir()
+    pricing_file = _pricing_file()
+
+    if not pricing_file.exists():
+        default_settings = PricingSettings(
+            baseOrderFee=5.0,
+            materialMarkupMultiplier=1.35,
+            hourlyPrintRate=4.0,
+            complexitySurcharge=3.0,
+            shippingMarkupFlat=1.5,
+        )
+        save_pricing_settings(default_settings)
+        return default_settings
+
+    with pricing_file.open("r", encoding="utf-8") as file:
+        raw_settings = json.load(file)
+
+    return PricingSettings.model_validate(raw_settings)
+
+
+def save_pricing_settings(settings: PricingSettings) -> PricingSettings:
+    _ensure_data_dir()
+    pricing_file = _pricing_file()
+
+    with pricing_file.open("w", encoding="utf-8") as file:
+        json.dump(settings.model_dump(mode="json"), file, indent=2)
+
+    return settings

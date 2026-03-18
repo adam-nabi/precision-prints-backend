@@ -7,6 +7,7 @@ It does three useful things right now:
 - serves real order data over HTTP
 - lets you fetch one order or all orders
 - lets you update an order status
+- lets a lead scout create dashboard orders from Reddit/Discord-style leads
 
 ## Files
 
@@ -67,6 +68,60 @@ What it does:
 - saves a manual payment link onto the order
 - moves the order to `Pending Payment`
 - lets the iPhone app open that link
+
+## Pricing Settings
+
+The backend now stores pricing settings so the app can control quote inputs.
+
+Routes:
+
+```text
+GET /pricing-settings
+PUT /pricing-settings
+```
+
+Example response:
+
+```json
+{
+  "baseOrderFee": 5.0,
+  "materialMarkupMultiplier": 1.35,
+  "hourlyPrintRate": 4.0,
+  "complexitySurcharge": 3.0,
+  "shippingMarkupFlat": 1.5
+}
+```
+
+## Lead Intake
+
+This backend now supports a simple lead-ingestion route so your future Reddit or Discord scout can create dashboard orders automatically.
+
+Route:
+
+```text
+POST /lead-intake
+```
+
+Example request:
+
+```json
+{
+  "source": "Reddit",
+  "customerName": "u/print-help-92",
+  "messageText": "Can someone print this for me in black? https://www.printables.com/model/12345-part",
+  "sourceURL": "https://reddit.com/...",
+  "modelURL": "https://files.printables.com/media/.../part.stl",
+  "quantity": 2
+}
+```
+
+What it does:
+
+- creates a new dashboard order
+- sets the order to `New Lead` when a model link is included
+- sets the order to `Manual Review` when the lead is missing a model link
+- saves the source message into notes
+- stores the model link so the iPhone app can open it
 
 ## Important Next Step
 
