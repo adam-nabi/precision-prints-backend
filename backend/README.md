@@ -156,6 +156,36 @@ Example request:
 }
 ```
 
+## Real Reddit Imports
+
+This backend can now scan real Reddit posts and turn matching ones into dashboard orders.
+
+Route:
+
+```text
+POST /integrations/reddit/scan
+```
+
+Required environment variables:
+
+- `REDDIT_CLIENT_ID`
+- `REDDIT_CLIENT_SECRET`
+- `REDDIT_USERNAME`
+- `REDDIT_PASSWORD`
+- `REDDIT_SUBREDDITS`
+
+Optional:
+
+- `REDDIT_USER_AGENT`
+- `REDDIT_LIMIT`
+
+What it does:
+
+- fetches recent posts from the configured subreddits
+- checks whether the post looks like a 3D print request
+- imports matching posts as orders
+- skips posts it already imported before
+
 ## Important Next Step
 
 Once this API is running, the next smallest app change is:

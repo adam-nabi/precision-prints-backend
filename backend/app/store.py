@@ -30,6 +30,10 @@ def _pricing_file() -> Path:
     return _data_dir() / "pricing_settings.json"
 
 
+def _reddit_seen_file() -> Path:
+    return _data_dir() / "reddit_seen.json"
+
+
 def _ensure_data_dir() -> None:
     _data_dir().mkdir(parents=True, exist_ok=True)
 
@@ -157,3 +161,24 @@ def save_pricing_settings(settings: PricingSettings) -> PricingSettings:
         json.dump(settings.model_dump(mode="json"), file, indent=2)
 
     return settings
+
+
+def load_reddit_seen_ids() -> List[str]:
+    _ensure_data_dir()
+    seen_file = _reddit_seen_file()
+
+    if not seen_file.exists():
+        return []
+
+    with seen_file.open("r", encoding="utf-8") as file:
+        raw_ids = json.load(file)
+
+    return [str(item) for item in raw_ids]
+
+
+def save_reddit_seen_ids(post_ids: List[str]) -> None:
+    _ensure_data_dir()
+    seen_file = _reddit_seen_file()
+
+    with seen_file.open("w", encoding="utf-8") as file:
+        json.dump(sorted(set(post_ids)), file, indent=2)

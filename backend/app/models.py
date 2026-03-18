@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import List, Optional
 from enum import Enum
 from uuid import UUID
 
@@ -74,6 +74,14 @@ class ScoutMessageResponse(BaseModel):
     detectedModelURL: Optional[str] = None
     detectedMaterial: Optional[str] = None
     unsupportedMaterial: Optional[str] = None
+
+
+class RedditScanResponse(BaseModel):
+    scannedPosts: int
+    importedOrders: int
+    skippedPosts: int
+    summary: str
+    createdOrders: List[Order] = []
 
 
 class PricingSettings(BaseModel):

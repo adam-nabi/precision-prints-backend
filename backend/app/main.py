@@ -10,6 +10,7 @@ from .models import (
     Order,
     OrderStatus,
     PricingSettings,
+    RedditScanResponse,
     ScoutMessageRequest,
     ScoutMessageResponse,
     UpdatePaymentLinkRequest,
@@ -17,6 +18,7 @@ from .models import (
     UpdateStatusRequest,
 )
 from .model_worker import process_model_url
+from .reddit_ingest import RedditConfigError, fetch_recent_posts
 from .scout import ALLOWED_SOURCES, analyze_message, build_notes, build_reply_draft, resolve_order_material
 from .store import (
     create_order,
@@ -24,7 +26,9 @@ from .store import (
     get_order,
     load_orders,
     load_pricing_settings,
+    load_reddit_seen_ids,
     save_pricing_settings,
+    save_reddit_seen_ids,
     save_order,
     update_order_status,
     update_payment_link,
@@ -92,6 +96,55 @@ def scout_message(request: ScoutMessageRequest) -> ScoutMessageResponse:
         detectedModelURL=match.detected_model_url,
         detectedMaterial=match.detected_material,
         unsupportedMaterial=match.unsupported_material,
+    )
+
+
+@app.post("/integrations/reddit/scan", response_model=RedditScanResponse)
+def scan_reddit() -> RedditScanResponse:
+    try:
+        posts = fetch_recent_posts()
+    except RedditConfigError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+    seen_post_ids = set(load_reddit_seen_ids())
+    created_orders: List[Order] = []
+    scanned_posts = 0
+
+    for post in posts:
+        scanned_posts += 1
+        if not post.post_id or post.post_id in seen_post_ids:
+            continue
+
+        message_text = _reddit_message_text(post)
+        match = analyze_message(message_text, post.outbound_url or post.permalink)
+        seen_post_ids.add(post.post_id)
+
+        if not match.matched:
+            continue
+
+        imported_order = _build_order_from_lead(
+            source="Reddit",
+            customer_name=post.author,
+            message_text=message_text,
+            source_url=post.permalink,
+            model_url=match.detected_model_url,
+            file_name=None,
+            quantity=1,
+            detected_material=match.detected_material,
+            unsupported_material=match.unsupported_material,
+            color_preference=None,
+        )
+        created_orders.append(_create_and_process_order(imported_order))
+
+    save_reddit_seen_ids(list(seen_post_ids))
+
+    imported_count = len(created_orders)
+    return RedditScanResponse(
+        scannedPosts=scanned_posts,
+        importedOrders=imported_count,
+        skippedPosts=max(scanned_posts - imported_count, 0),
+        summary=f"Scanned {scanned_posts} Reddit posts and created {imported_count} order(s).",
+        createdOrders=created_orders,
     )
 
 
@@ -284,3 +337,15 @@ def _resolve_unsupported_material(material_preference: Optional[str], detected_u
             return material_preference.strip()
 
     return detected_unsupported_material
+
+
+def _reddit_message_text(post) -> str:
+    pieces = [post.title.strip()]
+
+    if post.selftext.strip():
+        pieces.append(post.selftext.strip())
+
+    if post.outbound_url and "reddit.com" not in post.outbound_url:
+        pieces.append(post.outbound_url)
+
+    return "\n".join(piece for piece in pieces if piece)
