@@ -1,9 +1,11 @@
-from pathlib import PurePosixPath
+from pathlib import Path, PurePosixPath
 from uuid import UUID, uuid4
 from typing import Dict, List, Optional
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.templating import Jinja2Templates
 
 from .models import (
     DiscordScanResponse,
@@ -14,6 +16,7 @@ from .models import (
     RedditScanResponse,
     ScoutMessageRequest,
     ScoutMessageResponse,
+    UpdateOrderDetailsRequest,
     UpdatePaymentLinkRequest,
     UpdatePricingSettingsRequest,
     UpdateStatusRequest,
@@ -34,6 +37,7 @@ from .store import (
     save_pricing_settings,
     save_reddit_seen_ids,
     save_order,
+    update_order_details,
     update_order_status,
     update_payment_link,
 )
@@ -44,6 +48,8 @@ app = FastAPI(
     version="0.1.0",
     description="Small backend for the Precision Prints internal dashboard.",
 )
+
+templates = Jinja2Templates(directory=str(Path(__file__).resolve().parent / "templates"))
 
 app.add_middleware(
     CORSMiddleware,
@@ -57,6 +63,54 @@ app.add_middleware(
 @app.get("/health")
 def health_check() -> Dict[str, str]:
     return {"status": "ok"}
+
+
+@app.get("/", include_in_schema=False)
+def root() -> RedirectResponse:
+    return RedirectResponse(url="/dashboard", status_code=302)
+
+
+@app.get("/dashboard", response_class=HTMLResponse)
+def dashboard_page(request: Request) -> HTMLResponse:
+    orders = load_orders()
+    counts = {
+        "all": len(orders),
+        "new": len([order for order in orders if order.status == OrderStatus.NEW_LEAD]),
+        "quoted": len([order for order in orders if order.status == OrderStatus.QUOTED]),
+        "pending": len([order for order in orders if order.status == OrderStatus.PENDING_PAYMENT]),
+        "production": len(
+            [
+                order
+                for order in orders
+                if order.status in {OrderStatus.PAID, OrderStatus.PRINTING}
+            ]
+        ),
+        "shipped": len([order for order in orders if order.status == OrderStatus.SHIPPED]),
+    }
+
+    return templates.TemplateResponse(
+        request,
+        "dashboard.html",
+        {
+            "orders": orders,
+            "counts": counts,
+        },
+    )
+
+
+@app.get("/quote/{order_id}", response_class=HTMLResponse)
+def quote_page(request: Request, order_id: UUID) -> HTMLResponse:
+    order = get_order(order_id)
+    if order is None:
+        raise HTTPException(status_code=404, detail="Order not found")
+
+    return templates.TemplateResponse(
+        request,
+        "quote.html",
+        {
+            "order": order,
+        },
+    )
 
 
 @app.get("/orders", response_model=List[Order])
@@ -252,6 +306,22 @@ def patch_order_payment_link(order_id: UUID, request: UpdatePaymentLinkRequest) 
     return updated_order
 
 
+@app.patch("/orders/{order_id}", response_model=Order)
+def patch_order_details(order_id: UUID, request: UpdateOrderDetailsRequest) -> Order:
+    updated_order = update_order_details(
+        order_id=order_id,
+        reply_draft=request.replyDraft,
+        selected_shipping_option=request.selectedShippingOption,
+        shipping_name=request.shippingName,
+        shipping_address=request.shippingAddress,
+        shipping_zip=request.shippingZIP,
+    )
+    if updated_order is None:
+        raise HTTPException(status_code=404, detail="Order not found")
+
+    return updated_order
+
+
 @app.get("/pricing-settings", response_model=PricingSettings)
 def fetch_pricing_settings() -> PricingSettings:
     return load_pricing_settings()
@@ -287,6 +357,7 @@ def _build_order_from_lead(
         totalAmount=0.0,
         status=_lead_status(model_url, unsupported_material),
         replyDraft=build_reply_draft(customer_name, model_url, unsupported_material),
+        sourceURL=source_url,
         modelDownloadURL=model_url,
         notes=build_notes(source, message_text, source_url, unsupported_material),
     )
@@ -322,6 +393,8 @@ def _create_and_process_order(order: Order) -> Order:
             "downloadedFilePath": processing_result.downloaded_file_path,
             "estimatedPrintHours": processing_result.estimated_print_hours,
             "estimatedMaterialGrams": processing_result.estimated_material_grams,
+            "shippingOptions": processing_result.shipping_options or saved_order.shippingOptions,
+            "selectedShippingOption": processing_result.selected_shipping_option or saved_order.selectedShippingOption,
         }
     )
 

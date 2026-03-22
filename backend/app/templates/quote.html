@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Precision Prints Quote</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #101014;
+      --panel: #191b20;
+      --panel-2: #23262d;
+      --text: #ffffff;
+      --muted: #a8acb8;
+      --line: rgba(255,255,255,0.09);
+      --accent: #3da0ff;
+      --ok: #19c37d;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: linear-gradient(180deg, #171820 0%, var(--bg) 35%);
+      color: var(--text);
+    }
+    .shell {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 28px 18px 60px;
+    }
+    .hero, .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+    }
+    .hero {
+      padding: 22px;
+      margin-bottom: 16px;
+    }
+    .eyebrow {
+      color: var(--muted);
+      font-size: 0.92rem;
+      margin-bottom: 8px;
+    }
+    h1 {
+      margin: 0 0 10px;
+      font-size: 2rem;
+    }
+    .hero p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+    .summary {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 18px;
+      align-items: center;
+      margin-top: 18px;
+    }
+    .model-box {
+      height: 140px;
+      border-radius: 24px;
+      background: linear-gradient(145deg, rgba(61,160,255,0.28), rgba(55,208,175,0.14));
+      display: grid;
+      place-items: center;
+      font-size: 3.2rem;
+    }
+    .chips {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+    .chip {
+      background: var(--panel-2);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 0.9rem;
+      color: var(--text);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 16px;
+    }
+    .panel {
+      padding: 18px;
+    }
+    .panel h2 {
+      margin: 0 0 14px;
+      font-size: 1.1rem;
+    }
+    .row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .row:last-child { border-bottom: 0; }
+    .row .label { color: var(--muted); }
+    label {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+    input, select, textarea, button {
+      font: inherit;
+    }
+    input, select, textarea {
+      width: 100%;
+      background: var(--panel-2);
+      color: var(--text);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px 14px;
+    }
+    textarea {
+      min-height: 96px;
+      resize: vertical;
+    }
+    .field {
+      margin-bottom: 12px;
+    }
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+    button, .button {
+      border: 0;
+      border-radius: 14px;
+      padding: 13px 16px;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    button.primary, .button.primary {
+      background: var(--accent);
+      color: white;
+    }
+    .button.ok {
+      background: var(--ok);
+      color: white;
+    }
+    .note {
+      color: var(--muted);
+      line-height: 1.5;
+      margin-top: 10px;
+    }
+    .success {
+      color: #7ce7b7;
+      margin-top: 10px;
+      font-weight: 600;
+    }
+    @media (max-width: 760px) {
+      .summary, .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <div class="eyebrow">Precision Prints Quote</div>
+      <h1>{{ order.fileName }}</h1>
+      <p>Review the print, choose shipping, add your address, and then continue to payment.</p>
+
+      <div class="summary">
+        <div class="model-box">⬢</div>
+        <div>
+          <div style="font-size: 1.2rem; font-weight: 700;">{{ order.customerName }}</div>
+          <div class="chips">
+            <span class="chip">{{ order.material }}</span>
+            <span class="chip">{{ order.color }}</span>
+            <span class="chip">Qty {{ order.quantity }}</span>
+            <span class="chip">{{ order.source }}</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="panel">
+        <h2>Quote Summary</h2>
+        <div class="row"><span class="label">Print File</span><span>{{ order.fileName }}</span></div>
+        <div class="row"><span class="label">Shipping</span><span id="shipping-amount">${{ "%.2f"|format(order.shippingAmount) }}</span></div>
+        <div class="row"><span class="label">Total</span><span id="total-amount">${{ "%.2f"|format(order.totalAmount) }}</span></div>
+        <div class="row"><span class="label">Status</span><span id="order-status">{{ order.status.value }}</span></div>
+
+        {% if order.paymentLinkURL %}
+        <div class="actions">
+          <a class="button ok" href="{{ order.paymentLinkURL }}" target="_blank" rel="noreferrer">Pay with Square</a>
+        </div>
+        {% else %}
+        <p class="note">Payment link not added yet. Once Precision Prints saves your Square checkout link, it will appear here.</p>
+        {% endif %}
+
+        {% if order.modelDownloadURL %}
+        <div class="actions">
+          <a class="button primary" href="{{ order.modelDownloadURL }}" target="_blank" rel="noreferrer">Open Model Link</a>
+        </div>
+        {% endif %}
+      </div>
+
+      <div class="panel">
+        <h2>Shipping & Checkout</h2>
+
+        <div class="field">
+          <label for="shippingOption">Shipping option</label>
+          <select id="shippingOption">
+            {% if order.shippingOptions %}
+              {% for option in order.shippingOptions %}
+              <option value="{{ option.name }}" {% if order.selectedShippingOption == option.name %}selected{% endif %}>
+                {{ option.name }} • ${{ "%.2f"|format(option.amount) }} • {{ option.estimatedDays }}
+              </option>
+              {% endfor %}
+            {% else %}
+              <option value="{{ order.selectedShippingOption or 'Default Shipping' }}">{{ order.selectedShippingOption or 'Default Shipping' }}</option>
+            {% endif %}
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="shippingName">Full name</label>
+          <input id="shippingName" value="{{ order.shippingName or '' }}" placeholder="Your full name">
+        </div>
+
+        <div class="field">
+          <label for="shippingAddress">Shipping address</label>
+          <textarea id="shippingAddress" placeholder="Street, city, state">{{ order.shippingAddress or '' }}</textarea>
+        </div>
+
+        <div class="field">
+          <label for="shippingZIP">ZIP code</label>
+          <input id="shippingZIP" value="{{ order.shippingZIP or '' }}" placeholder="ZIP code">
+        </div>
+
+        <div class="actions">
+          <button class="primary" id="saveButton" type="button">Save Shipping Info</button>
+          {% if order.paymentLinkURL %}
+          <a class="button ok" href="{{ order.paymentLinkURL }}" target="_blank" rel="noreferrer">Go To Payment</a>
+          {% endif %}
+        </div>
+
+        <div class="success" id="successMessage" hidden>Saved.</div>
+        <p class="note">After saving your shipping choice and address, continue to payment. Your order will show up in the live dashboard right away.</p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const orderId = {{ order.id|string|tojson }};
+    const saveButton = document.getElementById("saveButton");
+    const successMessage = document.getElementById("successMessage");
+
+    saveButton.addEventListener("click", async () => {
+      saveButton.disabled = true;
+      successMessage.hidden = true;
+
+      const payload = {
+        selectedShippingOption: document.getElementById("shippingOption").value,
+        shippingName: document.getElementById("shippingName").value,
+        shippingAddress: document.getElementById("shippingAddress").value,
+        shippingZIP: document.getElementById("shippingZIP").value
+      };
+
+      const response = await fetch(`/orders/${orderId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      saveButton.disabled = false;
+
+      if (!response.ok) {
+        alert("Could not save your shipping info.");
+        return;
+      }
+
+      const updatedOrder = await response.json();
+      document.getElementById("shipping-amount").textContent = `$${updatedOrder.shippingAmount.toFixed(2)}`;
+      document.getElementById("total-amount").textContent = `$${updatedOrder.totalAmount.toFixed(2)}`;
+      document.getElementById("order-status").textContent = updatedOrder.status;
+      successMessage.hidden = false;
+    });
+  </script>
+</body>
+</html>

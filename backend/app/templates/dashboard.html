@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Precision Prints Dashboard</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0d0d10;
+      --panel: #17171c;
+      --panel-2: #202028;
+      --text: #ffffff;
+      --muted: #a7a7b3;
+      --line: rgba(255,255,255,0.08);
+      --accent: #3da0ff;
+      --green: #19c37d;
+      --yellow: #f4b740;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #1a1a22, var(--bg) 45%);
+      color: var(--text);
+    }
+    .shell {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 32px 20px 56px;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .header h1 {
+      margin: 0 0 8px;
+      font-size: 2.1rem;
+    }
+    .header p {
+      margin: 0;
+      color: var(--muted);
+    }
+    .counts {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+    .count-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 16px;
+    }
+    .count-card .label {
+      color: var(--muted);
+      font-size: 0.92rem;
+      margin-bottom: 6px;
+    }
+    .count-card .value {
+      font-size: 1.8rem;
+      font-weight: 700;
+    }
+    .orders {
+      display: grid;
+      gap: 14px;
+    }
+    .order-card {
+      display: grid;
+      grid-template-columns: 1.6fr 1fr auto;
+      gap: 16px;
+      align-items: center;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 18px;
+    }
+    .order-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .sub {
+      color: var(--muted);
+      line-height: 1.5;
+    }
+    .meta {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(110px, 1fr));
+      gap: 10px 14px;
+    }
+    .meta div {
+      background: var(--panel-2);
+      border-radius: 14px;
+      padding: 10px 12px;
+    }
+    .meta .label {
+      color: var(--muted);
+      font-size: 0.8rem;
+      margin-bottom: 4px;
+    }
+    .meta .value {
+      font-weight: 700;
+    }
+    .right {
+      display: flex;
+      flex-direction: column;
+      align-items: end;
+      gap: 12px;
+    }
+    .status {
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.84rem;
+      font-weight: 700;
+      background: rgba(61,160,255,0.16);
+      color: #82c5ff;
+    }
+    .status.paid, .status.printing, .status.shipped {
+      background: rgba(25,195,125,0.14);
+      color: #78e6b4;
+    }
+    .status.pending-payment, .status.quoted {
+      background: rgba(244,183,64,0.14);
+      color: #ffd67e;
+    }
+    a.button {
+      color: var(--text);
+      text-decoration: none;
+      background: var(--accent);
+      padding: 11px 16px;
+      border-radius: 12px;
+      font-weight: 700;
+    }
+    .link-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .ghost-link {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.92rem;
+    }
+    @media (max-width: 860px) {
+      .order-card {
+        grid-template-columns: 1fr;
+      }
+      .right {
+        align-items: start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="header">
+      <div>
+        <h1>Precision Prints Dashboard</h1>
+        <p>Website and iPhone app now read the same live orders.</p>
+      </div>
+    </section>
+
+    <section class="counts">
+      <div class="count-card"><div class="label">All Orders</div><div class="value">{{ counts.all }}</div></div>
+      <div class="count-card"><div class="label">New Leads</div><div class="value">{{ counts.new }}</div></div>
+      <div class="count-card"><div class="label">Quoted</div><div class="value">{{ counts.quoted }}</div></div>
+      <div class="count-card"><div class="label">Pending Payment</div><div class="value">{{ counts.pending }}</div></div>
+      <div class="count-card"><div class="label">Production</div><div class="value">{{ counts.production }}</div></div>
+      <div class="count-card"><div class="label">Shipped</div><div class="value">{{ counts.shipped }}</div></div>
+    </section>
+
+    <section class="orders">
+      {% for order in orders %}
+      <article class="order-card">
+        <div>
+          <div class="order-title">{{ order.customerName }} • {{ order.fileName }}</div>
+          <div class="sub">{{ order.source }}{% if order.shippingName %} • {{ order.shippingName }}{% endif %}</div>
+          <div class="link-row" style="margin-top: 10px;">
+            <a class="ghost-link" href="/quote/{{ order.id }}">Customer Quote Page</a>
+            {% if order.sourceURL %}
+            <a class="ghost-link" href="{{ order.sourceURL }}" target="_blank" rel="noreferrer">Source Post</a>
+            {% endif %}
+            {% if order.modelDownloadURL %}
+            <a class="ghost-link" href="{{ order.modelDownloadURL }}" target="_blank" rel="noreferrer">Model Link</a>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="meta">
+          <div><div class="label">Material</div><div class="value">{{ order.material }}</div></div>
+          <div><div class="label">Color</div><div class="value">{{ order.color }}</div></div>
+          <div><div class="label">Shipping</div><div class="value">${{ "%.2f"|format(order.shippingAmount) }}</div></div>
+          <div><div class="label">Total</div><div class="value">${{ "%.2f"|format(order.totalAmount) }}</div></div>
+        </div>
+
+        <div class="right">
+          <div class="status{% if order.status.value in ['Paid', 'Printing', 'Shipped'] %} paid{% elif order.status.value in ['Pending Payment', 'Quoted'] %} pending-payment{% endif %}">{{ order.status.value }}</div>
+          <a class="button" href="/quote/{{ order.id }}">Open Order</a>
+        </div>
+      </article>
+      {% endfor %}
+    </section>
+  </main>
+</body>
+</html>
