@@ -7,7 +7,7 @@ from urllib.parse import urlparse
 from urllib.request import Request, urlopen
 from uuid import UUID
 
-from .models import PricingSettings
+from .models import PricingSettings, ShippingOption
 from .page_extractors import ExtractedLinkResult, extract_direct_file_url
 
 
@@ -26,6 +26,8 @@ class DownloadQuoteResult:
     downloaded_file_path: Optional[str] = None
     estimated_print_hours: Optional[float] = None
     estimated_material_grams: Optional[float] = None
+    shipping_options: Optional[list[ShippingOption]] = None
+    selected_shipping_option: Optional[str] = None
     shipping_amount: Optional[float] = None
     total_amount: Optional[float] = None
 
@@ -96,14 +98,16 @@ def process_model_url(
 
     size_bytes = max(len(data), 1)
     size_mb = size_bytes / (1024 * 1024)
-    estimated_material_grams = round(max(size_mb * 45, 12) * max(quantity, 1), 1)
-    estimated_print_hours = round(max(size_mb * 1.2, 0.6) * max(quantity, 1), 1)
+    estimated_material_grams = round(max(size_mb * 42, 12) * max(quantity, 1), 1)
+    estimated_print_hours = round((max(size_mb * 1.05, 0.55) + _complexity_hours(extension, size_mb)) * max(quantity, 1), 1)
 
-    material_cost = estimated_material_grams * 0.06 * pricing_settings.materialMarkupMultiplier
+    material_rate = 0.065 if "petg" in file_name.lower() else 0.055
+    material_cost = estimated_material_grams * material_rate * pricing_settings.materialMarkupMultiplier
     print_cost = estimated_print_hours * pricing_settings.hourlyPrintRate
-    complexity_cost = pricing_settings.complexitySurcharge if extension in {".3mf", ".zip"} else 0
+    complexity_cost = pricing_settings.complexitySurcharge * _complexity_multiplier(extension, size_mb)
     subtotal = pricing_settings.baseOrderFee + material_cost + print_cost + complexity_cost
-    shipping_amount = round(BASE_SHIPPING_ESTIMATE + pricing_settings.shippingMarkupFlat, 2)
+    shipping_options = _build_shipping_options(estimated_material_grams, pricing_settings)
+    shipping_amount = shipping_options[0].amount
     total_amount = round(subtotal + shipping_amount, 2)
 
     return DownloadQuoteResult(
@@ -113,6 +117,8 @@ def process_model_url(
         downloaded_file_path=str(local_file_path),
         estimated_print_hours=estimated_print_hours,
         estimated_material_grams=estimated_material_grams,
+        shipping_options=shipping_options,
+        selected_shipping_option=shipping_options[0].name,
         shipping_amount=shipping_amount,
         total_amount=total_amount,
     )
@@ -151,3 +157,40 @@ def _build_success_reason(extraction_reason: Optional[str]) -> str:
         return f"{extraction_reason} The model file was then downloaded and rough pricing was created."
 
     return "Model file downloaded and rough quote created from the direct file link."
+
+
+def _complexity_multiplier(extension: str, size_mb: float) -> int:
+    multiplier = 1 if extension in {".3mf", ".zip"} else 0
+    if size_mb >= 8:
+        multiplier += 2
+    elif size_mb >= 3:
+        multiplier += 1
+    return multiplier
+
+
+def _complexity_hours(extension: str, size_mb: float) -> float:
+    bonus = 0.0
+    if extension == ".3mf":
+        bonus += 0.4
+    elif extension == ".zip":
+        bonus += 0.25
+
+    if size_mb >= 8:
+        bonus += 1.0
+    elif size_mb >= 3:
+        bonus += 0.5
+
+    return bonus
+
+
+def _build_shipping_options(estimated_material_grams: float, pricing_settings: PricingSettings) -> list[ShippingOption]:
+    base_amount = BASE_SHIPPING_ESTIMATE + pricing_settings.shippingMarkupFlat + (estimated_material_grams * 0.012)
+    economy = round(base_amount, 2)
+    ground = round(economy + 2.75, 2)
+    priority = round(economy + 6.5, 2)
+
+    return [
+        ShippingOption(name="Economy", amount=economy, estimatedDays="5-8 days"),
+        ShippingOption(name="Ground", amount=ground, estimatedDays="3-5 days"),
+        ShippingOption(name="Priority", amount=priority, estimatedDays="1-3 days"),
+    ]

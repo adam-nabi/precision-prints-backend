@@ -136,6 +136,46 @@ def update_payment_link(order_id: UUID, payment_link_url: str) -> Optional[Order
     return None
 
 
+def update_order_details(
+    order_id: UUID,
+    reply_draft: Optional[str] = None,
+    selected_shipping_option: Optional[str] = None,
+    shipping_name: Optional[str] = None,
+    shipping_address: Optional[str] = None,
+    shipping_zip: Optional[str] = None,
+) -> Optional[Order]:
+    orders = load_orders()
+
+    for index, order in enumerate(orders):
+        if order.id != order_id:
+            continue
+
+        updates = {
+            "replyDraft": reply_draft if reply_draft is not None else order.replyDraft,
+            "shippingName": shipping_name if shipping_name is not None else order.shippingName,
+            "shippingAddress": shipping_address if shipping_address is not None else order.shippingAddress,
+            "shippingZIP": shipping_zip if shipping_zip is not None else order.shippingZIP,
+        }
+
+        if selected_shipping_option:
+            matching_option = next(
+                (option for option in order.shippingOptions if option.name == selected_shipping_option),
+                None,
+            )
+            if matching_option is not None:
+                subtotal = max(order.totalAmount - order.shippingAmount, 0)
+                updates["selectedShippingOption"] = matching_option.name
+                updates["shippingAmount"] = matching_option.amount
+                updates["totalAmount"] = round(subtotal + matching_option.amount, 2)
+
+        updated_order = order.model_copy(update=updates)
+        orders[index] = updated_order
+        save_orders(orders)
+        return updated_order
+
+    return None
+
+
 def load_pricing_settings() -> PricingSettings:
     _ensure_data_dir()
     pricing_file = _pricing_file()
