@@ -15,6 +15,12 @@ class OrderStatus(str, Enum):
     MANUAL_REVIEW = "Manual Review"
 
 
+class ShippingOption(BaseModel):
+    name: str
+    amount: float
+    estimatedDays: str
+
+
 class Order(BaseModel):
     model_config = ConfigDict(extra="ignore")
 
@@ -29,11 +35,15 @@ class Order(BaseModel):
     totalAmount: float
     status: OrderStatus
     replyDraft: str
+    sourceURL: Optional[str] = None
     modelDownloadURL: Optional[str] = None
     paymentLinkURL: Optional[str] = None
+    quoteURL: Optional[str] = None
     downloadedFilePath: Optional[str] = None
     estimatedPrintHours: Optional[float] = None
     estimatedMaterialGrams: Optional[float] = None
+    shippingOptions: List[ShippingOption] = []
+    selectedShippingOption: Optional[str] = None
     shippingName: Optional[str] = None
     shippingAddress: Optional[str] = None
     shippingZIP: Optional[str] = None
@@ -46,6 +56,14 @@ class UpdateStatusRequest(BaseModel):
 
 class UpdatePaymentLinkRequest(BaseModel):
     paymentLinkURL: str
+
+
+class UpdateOrderDetailsRequest(BaseModel):
+    replyDraft: Optional[str] = None
+    selectedShippingOption: Optional[str] = None
+    shippingName: Optional[str] = None
+    shippingAddress: Optional[str] = None
+    shippingZIP: Optional[str] = None
 
 
 class IntakeLeadRequest(BaseModel):

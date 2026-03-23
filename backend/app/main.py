@@ -1,3 +1,4 @@
+import os
 from pathlib import Path, PurePosixPath
 from uuid import UUID, uuid4
 from typing import Dict, List, Optional
@@ -72,7 +73,7 @@ def root() -> RedirectResponse:
 
 @app.get("/dashboard", response_class=HTMLResponse)
 def dashboard_page(request: Request) -> HTMLResponse:
-    orders = load_orders()
+    orders = [_with_public_links(order) for order in load_orders()]
     counts = {
         "all": len(orders),
         "new": len([order for order in orders if order.status == OrderStatus.NEW_LEAD]),
@@ -104,6 +105,8 @@ def quote_page(request: Request, order_id: UUID) -> HTMLResponse:
     if order is None:
         raise HTTPException(status_code=404, detail="Order not found")
 
+    order = _with_public_links(order)
+
     return templates.TemplateResponse(
         request,
         "quote.html",
@@ -115,7 +118,7 @@ def quote_page(request: Request, order_id: UUID) -> HTMLResponse:
 
 @app.get("/orders", response_model=List[Order])
 def list_orders() -> List[Order]:
-    return load_orders()
+    return [_with_public_links(order) for order in load_orders()]
 
 
 @app.post("/scout/messages", response_model=ScoutMessageResponse)
@@ -278,7 +281,7 @@ def fetch_order(order_id: UUID) -> Order:
     if order is None:
         raise HTTPException(status_code=404, detail="Order not found")
 
-    return order
+    return _with_public_links(order)
 
 
 @app.delete("/orders/{order_id}", status_code=204)
@@ -294,7 +297,7 @@ def patch_order_status(order_id: UUID, request: UpdateStatusRequest) -> Order:
     if updated_order is None:
         raise HTTPException(status_code=404, detail="Order not found")
 
-    return updated_order
+    return _with_public_links(updated_order)
 
 
 @app.patch("/orders/{order_id}/payment-link", response_model=Order)
@@ -303,7 +306,7 @@ def patch_order_payment_link(order_id: UUID, request: UpdatePaymentLinkRequest) 
     if updated_order is None:
         raise HTTPException(status_code=404, detail="Order not found")
 
-    return updated_order
+    return _with_public_links(updated_order)
 
 
 @app.patch("/orders/{order_id}", response_model=Order)
@@ -319,7 +322,7 @@ def patch_order_details(order_id: UUID, request: UpdateOrderDetailsRequest) -> O
     if updated_order is None:
         raise HTTPException(status_code=404, detail="Order not found")
 
-    return updated_order
+    return _with_public_links(updated_order)
 
 
 @app.get("/pricing-settings", response_model=PricingSettings)
@@ -441,6 +444,19 @@ def _processed_reply_draft(order: Order, processing_result) -> str:
         f"${total_amount:.2f} shipped. "
         f"Shipping is currently estimated at ${shipping_amount:.2f}. "
         "If that works for you, send your color choice and shipping ZIP code and I can move to payment."
+    )
+
+
+def _public_base_url() -> str:
+    configured_base_url = os.getenv("PUBLIC_BASE_URL", "https://precision-prints-backend.onrender.com")
+    return configured_base_url.rstrip("/")
+
+
+def _with_public_links(order: Order) -> Order:
+    return order.model_copy(
+        update={
+            "quoteURL": f"{_public_base_url()}/quote/{order.id}",
+        }
     )
 
 
