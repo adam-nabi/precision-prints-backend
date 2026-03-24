@@ -2,7 +2,7 @@ from typing import List, Optional
 from enum import Enum
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class OrderStatus(str, Enum):
@@ -39,15 +39,17 @@ class Order(BaseModel):
     modelDownloadURL: Optional[str] = None
     paymentLinkURL: Optional[str] = None
     quoteURL: Optional[str] = None
+    customerPortalURL: Optional[str] = None
     downloadedFilePath: Optional[str] = None
     estimatedPrintHours: Optional[float] = None
     estimatedMaterialGrams: Optional[float] = None
-    shippingOptions: List[ShippingOption] = []
+    shippingOptions: List[ShippingOption] = Field(default_factory=list)
     selectedShippingOption: Optional[str] = None
     shippingName: Optional[str] = None
     shippingAddress: Optional[str] = None
     shippingZIP: Optional[str] = None
     notes: Optional[str] = None
+    customerEmail: Optional[str] = None
 
 
 class UpdateStatusRequest(BaseModel):
@@ -76,6 +78,7 @@ class IntakeLeadRequest(BaseModel):
     quantity: Optional[int] = 1
     materialPreference: Optional[str] = None
     colorPreference: Optional[str] = None
+    customerEmail: Optional[str] = None
 
 
 class ScoutMessageRequest(BaseModel):
@@ -99,7 +102,7 @@ class RedditScanResponse(BaseModel):
     importedOrders: int
     skippedPosts: int
     summary: str
-    createdOrders: List[Order] = []
+    createdOrders: List[Order] = Field(default_factory=list)
 
 
 class DiscordScanResponse(BaseModel):
@@ -107,7 +110,7 @@ class DiscordScanResponse(BaseModel):
     importedOrders: int
     skippedMessages: int
     summary: str
-    createdOrders: List[Order] = []
+    createdOrders: List[Order] = Field(default_factory=list)
 
 
 class PricingSettings(BaseModel):

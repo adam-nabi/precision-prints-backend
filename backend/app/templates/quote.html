@@ -362,7 +362,7 @@
     <section class="hero">
       <div class="eyebrow">Precision Prints Customer Portal</div>
       <h1>{{ order.fileName }}</h1>
-      <p class="hero-copy">Review your quote, choose shipping, enter your shipping information, pay securely, and come back to this same page any time to track your order.</p>
+      <p class="hero-copy">Review your quote, choose shipping, enter your address, pay securely with Square, and come back to this same page any time to track your order.</p>
 
       <div class="hero-grid">
         <div class="model-card">⬢</div>
@@ -457,7 +457,7 @@
 
       <div class="panel">
         <h2>Shipping & Payment</h2>
-        <p class="shipping-tip">Choose the shipping option you want, enter your address, save it, and then continue to payment using the button below.</p>
+        <p class="shipping-tip">Choose the shipping option you want, enter your address, save it, and then continue to your Square checkout using the button below.</p>
 
         <div class="field">
           <label for="shippingOption">Shipping option</label>
@@ -492,9 +492,9 @@
         <div class="actions">
           <button class="primary" id="saveButton" type="button">Save Shipping Info</button>
           {% if order.paymentLinkURL %}
-          <a class="button ok" href="{{ order.paymentLinkURL }}" target="_blank" rel="noreferrer">Pay Now</a>
+          <a class="button ok" href="{{ order.paymentLinkURL }}" target="_blank" rel="noreferrer">Pay with Square</a>
           {% else %}
-          <span class="button secondary">Payment link coming soon</span>
+          <span class="button secondary">Square checkout will appear here</span>
           {% endif %}
         </div>
 

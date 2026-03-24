@@ -26,6 +26,7 @@ from .discord_ingest import DiscordConfigError, fetch_recent_messages
 from .model_worker import process_model_url
 from .reddit_ingest import RedditConfigError, fetch_recent_posts
 from .scout import ALLOWED_SOURCES, analyze_message, build_notes, build_reply_draft, resolve_order_material
+from .square_checkout import create_square_payment_link, square_is_configured
 from .store import (
     create_order,
     delete_order,
@@ -67,8 +68,14 @@ def health_check() -> Dict[str, str]:
 
 
 @app.get("/", include_in_schema=False)
-def root() -> RedirectResponse:
-    return RedirectResponse(url="/dashboard", status_code=302)
+def root(request: Request) -> HTMLResponse:
+    return templates.TemplateResponse(
+        request,
+        "index.html",
+        {
+            "public_base_url": _public_base_url(),
+        },
+    )
 
 
 @app.get("/dashboard", response_class=HTMLResponse)
@@ -105,6 +112,7 @@ def quote_page(request: Request, order_id: UUID) -> HTMLResponse:
     if order is None:
         raise HTTPException(status_code=404, detail="Order not found")
 
+    order = _ensure_square_payment_link(order)
     order = _with_public_links(order)
 
     return templates.TemplateResponse(
@@ -147,6 +155,7 @@ def scout_message(request: ScoutMessageRequest) -> ScoutMessageResponse:
         detected_material=match.detected_material,
         unsupported_material=match.unsupported_material,
         color_preference=None,
+        customer_email=None,
     )
     saved_order = _create_and_process_order(imported_order)
 
@@ -193,6 +202,7 @@ def scan_discord() -> DiscordScanResponse:
             detected_material=match.detected_material,
             unsupported_material=match.unsupported_material,
             color_preference=None,
+            customer_email=None,
         )
         created_orders.append(_create_and_process_order(imported_order))
 
@@ -242,6 +252,7 @@ def scan_reddit() -> RedditScanResponse:
             detected_material=match.detected_material,
             unsupported_material=match.unsupported_material,
             color_preference=None,
+            customer_email=None,
         )
         created_orders.append(_create_and_process_order(imported_order))
 
@@ -271,6 +282,7 @@ def intake_lead(request: IntakeLeadRequest) -> Order:
         detected_material=_resolve_requested_material(request.materialPreference, analyzed_match.detected_material),
         unsupported_material=_resolve_unsupported_material(request.materialPreference, analyzed_match.unsupported_material),
         color_preference=request.colorPreference,
+        customer_email=request.customerEmail,
     )
     return _create_and_process_order(imported_order)
 
@@ -309,6 +321,16 @@ def patch_order_payment_link(order_id: UUID, request: UpdatePaymentLinkRequest) 
     return _with_public_links(updated_order)
 
 
+@app.post("/orders/{order_id}/square-payment-link", response_model=Order)
+def create_order_square_payment_link(order_id: UUID) -> Order:
+    order = get_order(order_id)
+    if order is None:
+        raise HTTPException(status_code=404, detail="Order not found")
+
+    updated_order = _ensure_square_payment_link(order, force_refresh=True)
+    return _with_public_links(updated_order)
+
+
 @app.patch("/orders/{order_id}", response_model=Order)
 def patch_order_details(order_id: UUID, request: UpdateOrderDetailsRequest) -> Order:
     updated_order = update_order_details(
@@ -322,6 +344,7 @@ def patch_order_details(order_id: UUID, request: UpdateOrderDetailsRequest) -> O
     if updated_order is None:
         raise HTTPException(status_code=404, detail="Order not found")
 
+    updated_order = _ensure_square_payment_link(updated_order, force_refresh=True)
     return _with_public_links(updated_order)
 
 
@@ -347,6 +370,7 @@ def _build_order_from_lead(
     detected_material: Optional[str],
     unsupported_material: Optional[str],
     color_preference: Optional[str],
+    customer_email: Optional[str],
 ) -> Order:
     return Order(
         id=uuid4(),
@@ -363,6 +387,7 @@ def _build_order_from_lead(
         sourceURL=source_url,
         modelDownloadURL=model_url,
         notes=build_notes(source, message_text, source_url, unsupported_material),
+        customerEmail=customer_email,
     )
 
 
@@ -456,8 +481,31 @@ def _with_public_links(order: Order) -> Order:
     return order.model_copy(
         update={
             "quoteURL": f"{_public_base_url()}/quote/{order.id}",
+            "customerPortalURL": f"{_public_base_url()}/quote/{order.id}",
         }
     )
+
+
+def _ensure_square_payment_link(order: Order, force_refresh: bool = False) -> Order:
+    if not square_is_configured():
+        return order
+
+    if order.totalAmount <= 0:
+        return order
+
+    if order.status in {OrderStatus.PAID, OrderStatus.PRINTING, OrderStatus.SHIPPED}:
+        return order
+
+    if order.paymentLinkURL and not force_refresh:
+        return order
+
+    try:
+        payment_link_url = create_square_payment_link(order, _public_base_url())
+    except RuntimeError:
+        return order
+
+    updated_order = update_payment_link(order.id, payment_link_url)
+    return updated_order or order
 
 
 def _resolve_requested_material(material_preference: Optional[str], detected_material: Optional[str]) -> Optional[str]:

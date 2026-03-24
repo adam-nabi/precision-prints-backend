@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Precision Prints</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #091018;
+      --panel: rgba(15, 21, 31, 0.92);
+      --panel-2: #161d2a;
+      --line: rgba(255,255,255,0.08);
+      --text: #f7fbff;
+      --muted: #9fb0c7;
+      --accent: #35a0ff;
+      --accent-2: #53f0b3;
+      --shadow: 0 22px 48px rgba(0,0,0,0.28);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(53,160,255,0.18), transparent 28%),
+        radial-gradient(circle at top right, rgba(83,240,179,0.12), transparent 24%),
+        linear-gradient(180deg, #0d1320 0%, var(--bg) 55%);
+    }
+
+    .shell {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 22px 18px 68px;
+    }
+
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .brand {
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a,
+    .button {
+      text-decoration: none;
+      color: var(--text);
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.04);
+      border-radius: 999px;
+      padding: 11px 16px;
+      font-weight: 700;
+    }
+
+    .button.primary {
+      background: linear-gradient(135deg, var(--accent), #2479ff);
+      border-color: transparent;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 18px;
+      align-items: stretch;
+      margin-bottom: 18px;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 30px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-copy {
+      padding: 30px;
+    }
+
+    .eyebrow {
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.84rem;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      margin: 0 0 14px;
+      font-size: clamp(2.2rem, 5vw, 4.3rem);
+      line-height: 0.98;
+    }
+
+    .lead {
+      margin: 0 0 18px;
+      max-width: 56ch;
+      color: var(--muted);
+      line-height: 1.65;
+      font-size: 1.02rem;
+    }
+
+    .hero-points {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .point {
+      display: flex;
+      gap: 10px;
+      align-items: start;
+      color: var(--text);
+    }
+
+    .dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 999px;
+      margin-top: 7px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      flex: none;
+    }
+
+    .hero-card {
+      padding: 24px;
+      display: grid;
+      gap: 16px;
+      align-content: start;
+    }
+
+    .stat {
+      background: var(--panel-2);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 16px;
+    }
+
+    .stat .label {
+      color: var(--muted);
+      font-size: 0.86rem;
+      margin-bottom: 6px;
+    }
+
+    .stat .value {
+      font-size: 1.4rem;
+      font-weight: 800;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 18px;
+    }
+
+    .section {
+      padding: 26px;
+    }
+
+    h2 {
+      margin: 0 0 8px;
+      font-size: 1.4rem;
+    }
+
+    .sub {
+      margin: 0 0 18px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .steps {
+      display: grid;
+      gap: 12px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 12px;
+      align-items: start;
+      padding: 14px;
+      background: var(--panel-2);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+    }
+
+    .step-number {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      background: rgba(53,160,255,0.12);
+      color: #9bd2ff;
+      font-weight: 800;
+    }
+
+    .step-title {
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .step-text {
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 0.95rem;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+    }
+
+    .field.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      font: inherit;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 13px 14px;
+      background: var(--panel-2);
+      color: var(--text);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 128px;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    .helper {
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.55;
+    }
+
+    .success,
+    .error {
+      display: none;
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      font-weight: 700;
+    }
+
+    .success {
+      background: rgba(83,240,179,0.12);
+      color: #a0ffd8;
+    }
+
+    .error {
+      background: rgba(255,82,82,0.12);
+      color: #ffb2b2;
+    }
+
+    @media (max-width: 900px) {
+      .hero, .grid, .form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <nav class="nav">
+      <div class="brand">PRECISION PRINTS</div>
+      <div class="nav-links">
+        <a href="#quote-form">Request a Quote</a>
+        <a href="/dashboard">Dashboard</a>
+      </div>
+    </nav>
+
+    <section class="hero">
+      <div class="panel hero-copy">
+        <div class="eyebrow">PLA & PETG 3D Printing</div>
+        <h1>Upload your part. Get a clean quote. Track the order in one link.</h1>
+        <p class="lead">
+          Send a Printables, MakerWorld, Thingiverse, STL, 3MF, or ZIP link and we will review it, build your quote,
+          collect shipping details, and send you to secure payment.
+        </p>
+
+        <div class="hero-points">
+          <div class="point"><span class="dot"></span><span>Simple quote request form that works on phone or desktop.</span></div>
+          <div class="point"><span class="dot"></span><span>Customers choose shipping and return to the same page to track status.</span></div>
+          <div class="point"><span class="dot"></span><span>Built around PLA and PETG only to keep quoting clear and reliable.</span></div>
+        </div>
+
+        <div class="form-actions">
+          <a class="button primary" href="#quote-form">Request a Quote</a>
+          <a class="button" href="/dashboard">Open Live Dashboard</a>
+        </div>
+      </div>
+
+      <div class="panel hero-card">
+        <div class="stat">
+          <div class="label">Customer flow</div>
+          <div class="value">Quote → Shipping → Pay → Track</div>
+        </div>
+        <div class="stat">
+          <div class="label">Materials supported</div>
+          <div class="value">PLA, PETG</div>
+        </div>
+        <div class="stat">
+          <div class="label">Quote link</div>
+          <div class="value">One page per order</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="panel section">
+        <h2>How it works</h2>
+        <p class="sub">Keep it simple. The customer uses one link from start to finish.</p>
+
+        <div class="steps">
+          <div class="step">
+            <div class="step-number">1</div>
+            <div>
+              <div class="step-title">Send the model link</div>
+              <div class="step-text">Paste a Printables, MakerWorld, Thingiverse, STL, 3MF, or ZIP link and tell us what you need printed.</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-number">2</div>
+            <div>
+              <div class="step-title">Review the quote</div>
+              <div class="step-text">We create a customer quote page with pricing, shipping choice, and order status tracking.</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-number">3</div>
+            <div>
+              <div class="step-title">Pay securely</div>
+              <div class="step-text">The quote page sends the customer to a secure Square-hosted checkout when payment is ready.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel section" id="quote-form">
+        <h2>Request a Quote</h2>
+        <p class="sub">This creates a live order and a customer portal link right away.</p>
+
+        <form id="leadForm">
+          <div class="form-grid">
+            <div class="field">
+              <label for="customerName">Your name</label>
+              <input id="customerName" required placeholder="Jordan M.">
+            </div>
+            <div class="field">
+              <label for="customerEmail">Email</label>
+              <input id="customerEmail" type="email" placeholder="you@example.com">
+            </div>
+            <div class="field">
+              <label for="materialPreference">Material</label>
+              <select id="materialPreference">
+                <option value="PLA">PLA</option>
+                <option value="PETG">PETG</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="quantity">Quantity</label>
+              <input id="quantity" type="number" min="1" step="1" value="1">
+            </div>
+            <div class="field full">
+              <label for="sourceURL">Model link</label>
+              <input id="sourceURL" placeholder="https://www.printables.com/model/... or direct STL/3MF/ZIP">
+            </div>
+            <div class="field">
+              <label for="colorPreference">Color</label>
+              <input id="colorPreference" placeholder="Matte Black">
+            </div>
+            <div class="field">
+              <label for="fileName">Known file name (optional)</label>
+              <input id="fileName" placeholder="iphone_mount_v2.stl">
+            </div>
+            <div class="field full">
+              <label for="messageText">What do you need printed?</label>
+              <textarea id="messageText" required placeholder="Tell us what you need, any deadlines, and anything important about the part."></textarea>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button class="button primary" type="submit" id="submitButton">Create Quote</button>
+          </div>
+          <p class="helper">After submission, the customer will be taken straight to their quote and tracking page.</p>
+          <div class="success" id="successMessage">Quote created. Opening customer portal…</div>
+          <div class="error" id="errorMessage">Could not create the quote right now.</div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const form = document.getElementById("leadForm");
+    const submitButton = document.getElementById("submitButton");
+    const successMessage = document.getElementById("successMessage");
+    const errorMessage = document.getElementById("errorMessage");
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      submitButton.disabled = true;
+      successMessage.style.display = "none";
+      errorMessage.style.display = "none";
+
+      const payload = {
+        source: "Website",
+        customerName: document.getElementById("customerName").value,
+        customerEmail: document.getElementById("customerEmail").value || null,
+        messageText: document.getElementById("messageText").value,
+        sourceURL: document.getElementById("sourceURL").value || null,
+        modelURL: document.getElementById("sourceURL").value || null,
+        fileName: document.getElementById("fileName").value || null,
+        quantity: Number(document.getElementById("quantity").value || 1),
+        materialPreference: document.getElementById("materialPreference").value,
+        colorPreference: document.getElementById("colorPreference").value || null
+      };
+
+      try {
+        const response = await fetch("/lead-intake", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+          throw new Error("request failed");
+        }
+
+        const order = await response.json();
+        successMessage.style.display = "block";
+        const target = order.quoteURL || `${window.location.origin}/quote/${order.id}`;
+        window.location.href = target;
+      } catch (error) {
+        errorMessage.style.display = "block";
+        submitButton.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
