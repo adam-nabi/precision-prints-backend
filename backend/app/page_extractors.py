@@ -80,12 +80,12 @@ def _find_direct_file_urls(page_url: str, html_text: str) -> List[str]:
 
     for raw_url in re.findall(r'https?://[^"\'>\s]+', html_text, flags=re.IGNORECASE):
         normalized = _normalize_url(page_url, raw_url)
-        if _is_direct_file_url(normalized):
+        if _looks_like_downloadable_url(normalized):
             candidates.append(normalized)
 
     for raw_url in re.findall(r'/(?:[^"\'>\s]+)', html_text):
         normalized = _normalize_url(page_url, raw_url)
-        if _is_direct_file_url(normalized):
+        if _looks_like_downloadable_url(normalized):
             candidates.append(normalized)
 
     return _unique(candidates)
@@ -130,6 +130,27 @@ def _is_direct_file_url(url: str) -> bool:
     return parsed.scheme in {"http", "https", "file"} and any(
         parsed.path.endswith(extension) for extension in SUPPORTED_DIRECT_EXTENSIONS
     )
+
+
+def _looks_like_downloadable_url(url: str) -> bool:
+    if _is_direct_file_url(url):
+        return True
+
+    lowered = url.lower()
+    parsed = urlparse(lowered)
+    if parsed.scheme not in {"http", "https"}:
+        return False
+
+    host = parsed.netloc
+    path_and_query = f"{parsed.path}?{parsed.query}"
+
+    if "printables.com" in host and "download" in path_and_query:
+        return True
+
+    if "makerworld.com" in host and "download" in path_and_query:
+        return True
+
+    return False
 
 
 def _printables_files_page(page_url: str) -> str:

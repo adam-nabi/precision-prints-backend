@@ -1,4 +1,5 @@
 import os
+import re
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 from typing import Optional
@@ -67,7 +68,7 @@ def process_model_url(
         extension = Path(parsed_url.path).suffix.lower()
         file_name = PurePosixPath(parsed_url.path).name or file_name
 
-    if extension not in SUPPORTED_DIRECT_EXTENSIONS:
+    if extension not in SUPPORTED_DIRECT_EXTENSIONS and "download" not in resolved_model_url.lower():
         return DownloadQuoteResult(
             downloaded=False,
             reason="The extracted download link was not an STL, 3MF, or ZIP file.",
@@ -80,6 +81,18 @@ def process_model_url(
 
     try:
         with urlopen(Request(resolved_model_url, headers=REQUEST_HEADERS), timeout=25) as response:
+            response_file_name = _filename_from_response(response, parsed_url.path)
+            if response_file_name:
+                file_name = response_file_name
+                extension = Path(file_name).suffix.lower()
+
+            if extension not in SUPPORTED_DIRECT_EXTENSIONS:
+                return DownloadQuoteResult(
+                    downloaded=False,
+                    reason="The download response was not an STL, 3MF, or ZIP file.",
+                    file_name=file_name,
+                )
+
             data = response.read()
     except HTTPError as error:
         return DownloadQuoteResult(
@@ -149,7 +162,25 @@ def _extract_from_model_page(model_url: str) -> ExtractedLinkResult:
             reason="Model page fetch failed because the host could not be reached.",
         )
 
-    return extract_direct_file_url(model_url, html_text)
+    extraction_result = extract_direct_file_url(model_url, html_text)
+    if extraction_result.direct_file_url or model_url.endswith("/files"):
+        return extraction_result
+
+    files_page_url = extraction_result.display_page_url
+    if not files_page_url or files_page_url == model_url:
+        return extraction_result
+
+    try:
+        with urlopen(Request(files_page_url, headers=REQUEST_HEADERS), timeout=25) as response:
+            files_html_text = response.read().decode("utf-8", errors="ignore")
+    except (HTTPError, URLError):
+        return extraction_result
+
+    second_pass_result = extract_direct_file_url(files_page_url, files_html_text)
+    if second_pass_result.direct_file_url:
+        return second_pass_result
+
+    return extraction_result
 
 
 def _build_success_reason(extraction_reason: Optional[str]) -> str:
@@ -157,6 +188,22 @@ def _build_success_reason(extraction_reason: Optional[str]) -> str:
         return f"{extraction_reason} The model file was then downloaded and rough pricing was created."
 
     return "Model file downloaded and rough quote created from the direct file link."
+
+
+def _filename_from_response(response, fallback_path: str) -> Optional[str]:
+    content_disposition = response.headers.get("Content-Disposition", "")
+    match = re.search(r'filename\*?=(?:UTF-8\'\')?"?([^";]+)"?', content_disposition, flags=re.IGNORECASE)
+    if match:
+        return Path(match.group(1)).name
+
+    response_url = getattr(response, "geturl", lambda: "")()
+    if response_url:
+        response_name = PurePosixPath(urlparse(response_url).path).name
+        if response_name:
+            return response_name
+
+    fallback_name = PurePosixPath(fallback_path).name
+    return fallback_name or None
 
 
 def _complexity_multiplier(extension: str, size_mb: float) -> int:
